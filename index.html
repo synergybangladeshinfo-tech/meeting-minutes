@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="bn" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,54 +8,71 @@
 <meta name="theme-color" content="#0d6e5c">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="apple-touch-icon" href="icon-192.png">
 <style>
   :root{
-    --bg:#0f172a; --panel:#ffffff; --line:#e2e8f0; --muted:#64748b;
-    --brand:#0d6e5c; --brand2:#0ea371; --accent:#b45309; --danger:#b91c1c;
-    --soft:#f8fafc;
+    --bg:#eef2f6; --panel:#ffffff; --line:#e2e8f0; --text:#0f172a; --muted:#64748b;
+    --soft:#f8fafc; --brand:#0d6e5c; --brand2:#0ea371; --accent:#b45309; --danger:#b91c1c;
+    --ok:#166534; --shade:#ecfdf5; --shline:#a7f3d0; --note:#fffbeb; --noteline:#fde68a; --notetext:#92400e;
+    --info:#eff6ff; --infoline:#bfdbfe; --infotext:#1e40af; --dropline:#94a3b8;
+  }
+  [data-theme="dark"]{
+    --bg:#0b1220; --panel:#131c2e; --line:#26334a; --text:#e6edf7; --muted:#93a4bd;
+    --soft:#0f1829; --brand:#22c88f; --brand2:#16a97a; --accent:#d97706; --danger:#f87171;
+    --ok:#4ade80; --shade:#0e2a22; --shline:#1e5f4a; --note:#2a1f0a; --noteline:#5a4210; --notetext:#fcd34d;
+    --info:#0f2036; --infoline:#1e3a5f; --infotext:#93c5fd; --dropline:#3d4c66;
   }
   *{box-sizing:border-box}
   body{
-    margin:0; background:#eef2f6; color:#0f172a;
+    margin:0; background:var(--bg); color:var(--text);
     font-family:"Nirmala UI","Hind Siliguri","Segoe UI",system-ui,sans-serif;
-    font-size:15px; line-height:1.6;
+    font-size:15px; line-height:1.6; transition:background .2s,color .2s;
   }
   header{
-    background:linear-gradient(120deg,#0d6e5c,#0ea371); color:#fff;
-    padding:18px 24px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+    background:linear-gradient(120deg,var(--brand),var(--brand2)); color:#fff;
+    padding:16px 22px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;
   }
+  [data-theme="dark"] header{color:#04170f}
   header h1{margin:0; font-size:21px; font-weight:700}
-  header .sub{opacity:.85; font-size:13px}
+  header .sub{opacity:.88; font-size:13px}
+  .tools{margin-left:auto; display:flex; align-items:center; gap:8px; flex-wrap:wrap}
+  .tools .tbtn{
+    background:rgba(255,255,255,.18); color:inherit; border:1px solid rgba(255,255,255,.35);
+    padding:7px 12px; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer;
+  }
+  .tools .tbtn:hover{background:rgba(255,255,255,.3)}
+  .tools .save{font-size:12px; opacity:.9; width:100%; text-align:right}
   .wrap{max-width:1180px; margin:0 auto; padding:20px 16px 60px}
   .grid{display:grid; grid-template-columns:1fr 1fr; gap:18px}
   @media (max-width:900px){.grid{grid-template-columns:1fr}}
   .card{background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:18px; margin-bottom:18px}
-  .card h2{margin:0 0 14px; font-size:16px; color:var(--brand); display:flex; align-items:center; gap:8px}
-  .card h2 .n{background:var(--brand); color:#fff; width:22px; height:22px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-size:12px}
+  .card h2{margin:0 0 14px; font-size:16px; color:var(--brand); display:flex; align-items:center; gap:8px; flex-wrap:wrap}
+  .card h2 .n{background:var(--brand); color:var(--panel); width:22px; height:22px; border-radius:50%;
+              display:inline-flex; align-items:center; justify-content:center; font-size:12px; flex:none}
   label{display:block; font-size:13px; color:var(--muted); margin:10px 0 4px; font-weight:600}
   input,textarea,select{
     width:100%; padding:9px 11px; border:1px solid var(--line); border-radius:8px;
-    font-family:inherit; font-size:14px; background:#fff;
+    font-family:inherit; font-size:14px; background:var(--panel); color:var(--text);
   }
   textarea{resize:vertical}
-  input:focus,textarea:focus,select:focus{outline:2px solid #86efac; border-color:var(--brand2)}
+  input:focus,textarea:focus,select:focus{outline:2px solid var(--brand2); border-color:var(--brand2)}
+  input::placeholder,textarea::placeholder{color:var(--muted); opacity:.7}
   .row{display:flex; gap:12px; flex-wrap:wrap}
   .row>div{flex:1; min-width:150px}
   button{
     font-family:inherit; font-size:14px; font-weight:600; border:0; border-radius:8px;
     padding:10px 16px; cursor:pointer; background:var(--brand); color:#fff;
   }
+  [data-theme="dark"] button{color:#04170f}
   button:hover{filter:brightness(1.08)}
   button:disabled{opacity:.45; cursor:not-allowed; filter:none}
-  button.ghost{background:#fff; color:var(--brand); border:1.5px solid var(--brand)}
-  button.warn{background:var(--accent)}
-  button.stop{background:var(--danger)}
+  button.ghost{background:var(--panel); color:var(--brand); border:1.5px solid var(--brand)}
+  button.warn{background:var(--accent); color:#fff}
+  button.stop{background:var(--danger); color:#fff}
   button.sm{padding:6px 11px; font-size:13px}
   .bar{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
   .status{display:flex; align-items:center; gap:8px; font-size:13px; color:var(--muted); margin-left:auto}
-  .dot{width:11px; height:11px; border-radius:50%; background:#cbd5e1}
+  .dot{width:11px; height:11px; border-radius:50%; background:var(--line)}
   .dot.live{background:#dc2626; animation:pulse 1.2s infinite}
   .dot.pause{background:#f59e0b}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
@@ -63,53 +80,60 @@
     min-height:260px; max-height:420px; overflow-y:auto; background:var(--soft);
     border:1px solid var(--line); border-radius:8px; padding:14px; margin-top:12px;
   }
-  .seg{margin-bottom:9px; padding-bottom:9px; border-bottom:1px dashed #e2e8f0}
+  .seg{margin-bottom:9px; padding-bottom:9px; border-bottom:1px dashed var(--line)}
   .seg:last-child{border:0}
   .seg .t{font-size:11px; color:var(--muted); font-variant-numeric:tabular-nums}
   .seg .sp{font-weight:700; color:var(--brand)}
   .seg .txt{display:block; margin-top:2px}
-  .seg[contenteditable="true"]:focus{outline:none}
-  #interim{color:#94a3b8; font-style:italic}
+  #interim{color:var(--muted); font-style:italic}
   .item{display:flex; gap:8px; align-items:flex-start; margin-bottom:8px}
   .item input{flex:1}
-  .item .del{background:#fee2e2; color:#b91c1c; padding:8px 10px; border-radius:8px; font-size:13px}
+  .item .del,.del{background:rgba(185,28,28,.12); color:var(--danger); padding:8px 10px; border-radius:8px; font-size:13px}
   .hint{font-size:12px; color:var(--muted); margin-top:6px}
-  .pill{display:inline-block; background:#ecfdf5; color:#065f46; border:1px solid #a7f3d0; padding:2px 9px; border-radius:99px; font-size:12px; font-weight:600}
-  .warnbox{background:#fffbeb; border:1px solid #fde68a; color:#92400e; padding:10px 12px; border-radius:8px; font-size:13px; margin-top:10px}
+  .pill{display:inline-block; background:var(--shade); color:var(--ok); border:1px solid var(--shline);
+        padding:2px 9px; border-radius:99px; font-size:12px; font-weight:600}
+  .warnbox{background:var(--note); border:1px solid var(--noteline); color:var(--notetext);
+           padding:10px 12px; border-radius:8px; font-size:13px; margin-top:10px; line-height:1.7}
+  .infobox{background:var(--info); border:1px solid var(--infoline); color:var(--infotext);
+           padding:12px 14px; border-radius:8px; font-size:13px; margin-top:10px; line-height:1.7}
   table.mini{width:100%; border-collapse:collapse; font-size:13px}
-  table.mini th,table.mini td{border:1px solid var(--line); padding:6px 8px; text-align:right}
+  table.mini th,table.mini td{border:1px solid var(--line); padding:6px 8px; text-align:left}
   table.mini th{background:var(--soft); font-size:12px; color:var(--muted)}
-  table.mini td input{border:0; padding:4px}
-  table.mini td:first-child,table.mini th:first-child{text-align:left}
-  table.mini td{text-align:left}
+  table.mini td input{border:0; padding:4px; background:transparent}
   .foot{text-align:center; color:var(--muted); font-size:12px; margin-top:24px}
   #drop{
-    border:2px dashed #94a3b8; border-radius:12px; padding:30px 18px; text-align:center;
+    border:2px dashed var(--dropline); border-radius:12px; padding:30px 18px; text-align:center;
     background:var(--soft); cursor:pointer; transition:.15s;
   }
-  #drop:hover,#drop.over{border-color:var(--brand2); background:#ecfdf5}
+  #drop:hover,#drop.over{border-color:var(--brand2); background:var(--shade)}
   #drop .big{font-size:34px}
   #drop .t1{font-weight:700; margin-top:6px}
   #drop .t2{font-size:12px; color:var(--muted)}
-  .prog{height:9px; background:#e2e8f0; border-radius:99px; overflow:hidden; margin-top:12px; display:none}
-  .prog>i{display:block; height:100%; width:0; background:linear-gradient(90deg,#0d6e5c,#22c55e); transition:width .3s}
+  .prog{height:9px; background:var(--line); border-radius:99px; overflow:hidden; margin-top:12px; display:none}
+  .prog>i{display:block; height:100%; width:0; background:linear-gradient(90deg,var(--brand),var(--brand2)); transition:width .3s}
   #progTxt{font-size:13px; color:var(--brand); margin-top:8px; display:none; font-weight:600}
   details.set{border:1px solid var(--line); border-radius:10px; padding:10px 14px; background:var(--soft); margin-bottom:14px}
   details.set summary{cursor:pointer; font-weight:700; font-size:13px; color:var(--brand)}
   details.set[open] summary{margin-bottom:8px}
-
-  /* ---- মোবাইল ---- */
+  .ok{color:var(--ok); font-weight:600}
+  .err{color:var(--danger); font-weight:600}
+  .exportbar{position:sticky; bottom:0; background:var(--panel); border-top:2px solid var(--brand);
+             padding:14px 16px; display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+             border-radius:12px 12px 0 0; box-shadow:0 -4px 16px rgba(0,0,0,.12)}
+  .deskonly{display:none; background:var(--note); border:1px solid var(--noteline); color:var(--notetext);
+            padding:12px 14px; border-radius:8px; font-size:13px; line-height:1.7; margin-top:10px}
+  /* ---- mobile ---- */
   @media (max-width:640px){
     header{padding:14px 16px; gap:10px}
     header h1{font-size:18px}
     header .sub{font-size:11px}
+    .tools{width:100%; margin-left:0}
     .wrap{padding:12px 10px 40px}
     .card{padding:14px; border-radius:10px; margin-bottom:14px}
     .card h2{font-size:15px}
-    input,textarea,select{font-size:16px; padding:11px}   /* ১৬px না হলে iPhone জুম করে ফেলে */
+    input,textarea,select{font-size:16px; padding:11px}
     button{padding:13px 16px; font-size:15px; flex:1 1 auto}
     button.sm{padding:9px 12px; font-size:13px; flex:0 0 auto}
-    .bar{gap:8px}
     .status{margin-left:0; width:100%; justify-content:flex-start}
     .row>div{min-width:100%; flex:1 1 100%}
     #transcript{max-height:300px; padding:11px}
@@ -117,13 +141,7 @@
     table.mini{font-size:12px}
     table.mini th,table.mini td{padding:5px}
     .exportbar{padding:12px 10px; gap:8px}
-    .foot{font-size:11px}
   }
-  .deskonly{display:none; background:#fff7ed; border:1px solid #fed7aa; color:#9a3412;
-            padding:12px 14px; border-radius:8px; font-size:13px; line-height:1.7}
-  .ok{color:#166534; font-weight:600}
-  .err{color:#b91c1c; font-weight:600}
-  .exportbar{position:sticky; bottom:0; background:#fff; border-top:2px solid var(--brand); padding:14px 16px; display:flex; gap:10px; flex-wrap:wrap; align-items:center; border-radius:12px 12px 0 0; box-shadow:0 -4px 16px rgba(0,0,0,.07)}
 </style>
 </head>
 <body>
@@ -131,239 +149,446 @@
 <header>
   <div style="font-size:30px">🎙️</div>
   <div>
-    <h1>মিটিং মিনিটস রেকর্ডার</h1>
-    <div class="sub">ভয়েস রেকর্ড → স্বয়ংক্রিয় ট্রান্সক্রিপ্ট → সুন্দর Word (.docx) ফাইল</div>
+    <h1 data-t="appName">মিটিং মিনিটস রেকর্ডার</h1>
+    <div class="sub" data-t="appSub">ভয়েস রেকর্ড → স্বয়ংক্রিয় ট্রান্সক্রিপ্ট → সুন্দর Word (.docx) ফাইল</div>
   </div>
-  <div class="status" style="color:#dcfce7">
-    <span id="autosave">সেভ হয়নি</span>
+  <div class="tools">
+    <button class="tbtn" id="btnLang" title="Language">🌐 English</button>
+    <button class="tbtn" id="btnTheme" title="Theme">🌙</button>
+    <span class="save" id="autosave"></span>
   </div>
 </header>
 
 <div class="wrap">
 
-  <!-- 1. Meeting info -->
+  <!-- 1 -->
   <div class="card">
-    <h2><span class="n">১</span> সভার তথ্য</h2>
+    <h2><span class="n">1</span><span data-t="s1">সভার তথ্য</span></h2>
     <div class="row">
-      <div style="flex:2"><label>সভার শিরোনাম</label><input id="mTitle" placeholder="যেমন: মাসিক ব্যবস্থাপনা সভা"></div>
-      <div><label>সভা নং</label><input id="mNo" placeholder="০৭/২০২৬"></div>
+      <div style="flex:2"><label data-t="lTitle"></label><input id="mTitle" data-tp="phTitle"></div>
+      <div><label data-t="lNo"></label><input id="mNo" data-tp="phNo"></div>
     </div>
     <div class="row">
-      <div><label>তারিখ</label><input type="date" id="mDate"></div>
-      <div><label>সময়</label><input id="mTime" placeholder="সকাল ১০:০০"></div>
-      <div><label>স্থান</label><input id="mVenue" placeholder="কনফারেন্স রুম / Zoom"></div>
+      <div><label data-t="lDate"></label><input type="date" id="mDate"></div>
+      <div><label data-t="lTime"></label><input id="mTime" data-tp="phTime"></div>
+      <div><label data-t="lVenue"></label><input id="mVenue" data-tp="phVenue"></div>
     </div>
     <div class="row">
-      <div><label>সভাপতি</label><input id="mChair" placeholder="নাম ও পদবি"></div>
-      <div><label>মিনিটস প্রস্তুতকারী</label><input id="mSecretary" placeholder="নাম ও পদবি"></div>
+      <div><label data-t="lChair"></label><input id="mChair" data-tp="phName"></div>
+      <div><label data-t="lSec"></label><input id="mSecretary" data-tp="phName"></div>
     </div>
     <div class="row">
-      <div><label>উপস্থিত সদস্য (প্রতি লাইনে একজন)</label><textarea id="mPresent" rows="4" placeholder="১. মোঃ রহিম উদ্দিন — ব্যবস্থাপক&#10;২. Farhana Akter — HR Officer"></textarea></div>
-      <div><label>অনুপস্থিত</label><textarea id="mAbsent" rows="4" placeholder="নাম (কারণসহ)"></textarea></div>
+      <div><label data-t="lPresent"></label><textarea id="mPresent" rows="4" data-tp="phPresent"></textarea></div>
+      <div><label data-t="lAbsent"></label><textarea id="mAbsent" rows="4" data-tp="phAbsent"></textarea></div>
     </div>
-    <label>আলোচ্যসূচি / Agenda (প্রতি লাইনে একটি)</label>
-    <textarea id="mAgenda" rows="4" placeholder="১. পূর্ববর্তী সভার কার্যবিবরণী অনুমোদন&#10;২. জুলাই মাসের বিক্রয় পর্যালোচনা&#10;৩. বিবিধ"></textarea>
+    <label data-t="lAgenda"></label>
+    <textarea id="mAgenda" rows="4" data-tp="phAgenda"></textarea>
   </div>
 
-  <!-- 2. Recording -->
+  <!-- 2 -->
   <div class="card">
-    <h2><span class="n">২</span> ভয়েস রেকর্ডিং</h2>
+    <h2><span class="n">2</span><span data-t="s2">ভয়েস রেকর্ডিং</span></h2>
     <div class="row" style="margin-bottom:12px">
       <div style="max-width:230px">
-        <label>বলার ভাষা</label>
+        <label data-t="lSpokenLang"></label>
         <select id="lang">
           <option value="bn-BD">বাংলা (বাংলাদেশ)</option>
           <option value="en-US">English (US)</option>
-          <option value="en-IN">English (India/South Asia)</option>
+          <option value="en-IN">English (India)</option>
           <option value="hi-IN">हिन्दी</option>
         </select>
       </div>
       <div style="max-width:230px">
-        <label>বর্তমান বক্তা (ঐচ্ছিক)</label>
-        <input id="speaker" placeholder="যেমন: সভাপতি">
+        <label data-t="lSpeaker"></label>
+        <input id="speaker" data-tp="phSpeaker">
       </div>
     </div>
     <div class="bar">
-      <button id="btnStart">● রেকর্ড শুরু</button>
-      <button id="btnPause" class="warn" disabled>⏸ বিরতি</button>
-      <button id="btnStop" class="stop" disabled>■ শেষ</button>
-      <button id="btnClear" class="ghost">🗑 ট্রান্সক্রিপ্ট মুছুন</button>
-      <div class="status"><span class="dot" id="dot"></span><span id="stateTxt">প্রস্তুত</span> · <span id="timer">00:00:00</span></div>
+      <button id="btnStart"></button>
+      <button id="btnPause" class="warn" disabled></button>
+      <button id="btnStop" class="stop" disabled></button>
+      <button id="btnClear" class="ghost"></button>
+      <div class="status"><span class="dot" id="dot"></span><span id="stateTxt"></span> · <span id="timer">00:00:00</span></div>
     </div>
-    <div class="hint">💡 ভাষা যেকোনো সময় বদলানো যায় — মিশ্র (বাংলা+ইংরেজি) সভায় বক্তা বদলালে ড্রপডাউন বদলে দিন, রেকর্ডিং থামবে না।</div>
+    <div class="hint" data-t="hintLang"></div>
     <div id="transcript" contenteditable="true" spellcheck="false"><div id="interim"></div></div>
-    <div class="hint">✏️ উপরের লেখা সরাসরি এডিট করা যায় — ভুল শব্দ ঠিক করে নিন।</div>
-    <div id="noSupport" class="warnbox" style="display:none">
-      ⚠️ এই ব্রাউজারে ভয়েস-টু-টেক্সট সাপোর্ট নেই। অনুগ্রহ করে <b>Google Chrome</b> বা <b>Microsoft Edge</b> দিয়ে ফাইলটি খুলুন এবং ইন্টারনেট সংযোগ রাখুন।
-    </div>
+    <div class="hint" data-t="hintEdit"></div>
+    <div id="noSupport" class="warnbox" data-th="noSupport" style="display:none"></div>
   </div>
 
-  <!-- 3. Upload audio -->
+  <!-- 3 -->
   <div class="card">
-    <h2><span class="n">৩</span> মোবাইলে রেকর্ড করা অডিও আপলোড করুন <span class="pill">ফ্রি</span></h2>
+    <h2><span class="n">3</span><span data-t="s3">অডিও আপলোড</span> <span class="pill" data-t="pillFree"></span></h2>
 
     <details class="set" id="apiBox">
-      <summary>⚙️ API সেটিংস (একবার সেট করলেই হবে) — <span id="keyState">সেট করা নেই</span></summary>
+      <summary><span data-t="setTitle"></span> — <span id="keyState"></span></summary>
       <div class="row">
         <div style="max-width:220px">
-          <label>সার্ভিস</label>
+          <label data-t="lService"></label>
           <select id="provider">
-            <option value="groq">Groq (সস্তা ও দ্রুত)</option>
-            <option value="openai">OpenAI</option>
+            <option value="groq" data-t="optGroq"></option>
+            <option value="openai" data-t="optOpenai"></option>
           </select>
         </div>
         <div>
           <label>API Key</label>
-          <input id="apiKey" type="password" placeholder="gsk_... অথবা sk-...">
+          <input id="apiKey" type="password" placeholder="gsk_... / sk-...">
         </div>
       </div>
       <div class="row">
-        <div><label>ট্রান্সক্রিপশন মডেল</label><input id="sttModel"></div>
-        <div><label>সাজানোর মডেল (AI)</label><input id="llmModel"></div>
-        <div style="max-width:190px"><label>অডিওর ভাষা</label>
+        <div><label data-t="lStt"></label><input id="sttModel"></div>
+        <div><label data-t="lLlm"></label><input id="llmModel"></div>
+        <div style="max-width:190px"><label data-t="lAudioLang"></label>
           <select id="upLang">
-            <option value="">স্বয়ংক্রিয় (মিশ্র)</option>
-            <option value="bn">বাংলা</option>
-            <option value="en">English</option>
+            <option value="" data-t="optAutoLang"></option>
+            <option value="bn" data-t="optBn"></option>
+            <option value="en" data-t="optEn"></option>
           </select>
         </div>
       </div>
       <div class="bar" style="margin-top:10px">
-        <button class="ghost sm" id="btnSaveKey">💾 সেভ করুন</button>
-        <button class="ghost sm" id="btnTestKey">🔌 কানেকশন পরীক্ষা</button>
-        <button class="sm" id="btnSelfTest">🧪 পূর্ণ পরীক্ষা চালান</button>
+        <button class="ghost sm" id="btnSaveKey"></button>
+        <button class="ghost sm" id="btnTestKey"></button>
+        <button class="sm" id="btnSelfTest"></button>
         <span id="keyMsg" class="hint" style="margin:0"></span>
       </div>
-      <div id="testOut" class="hint" style="display:none; background:#fff; border:1px solid var(--line); border-radius:8px; padding:10px 12px; margin-top:10px"></div>
-      <div class="hint">
-        <b>💚 সম্পূর্ণ ফ্রি:</b> Groq-এর ফ্রি প্ল্যানে দিনে <b>৮ ঘণ্টা</b> অডিও লেখায় রূপান্তর করা যায় — কোনো কার্ড লাগে না, কোনো বিল আসে না।
-        সীমা ছুঁয়ে গেলে অ্যাপ নিজেই অপেক্ষা করে আবার চেষ্টা করে।<br>
-        Key নিন → Groq: <b>console.groq.com/keys</b> · OpenAI (পেইড): <b>platform.openai.com/api-keys</b><br>
-        🔒 Key শুধু আপনার ব্রাউজারে সেভ থাকে, অন্য কোথাও যায় না।
-      </div>
+      <div id="testOut" class="hint" style="display:none; background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:10px 12px; margin-top:10px"></div>
+      <div class="hint" data-th="keyNote"></div>
     </details>
 
     <div id="drop">
       <div class="big">🎧</div>
-      <div class="t1">অডিও ফাইল এখানে টেনে আনুন, বা ক্লিক করে বেছে নিন</div>
-      <div class="t2">mp3 · m4a · wav · ogg · webm · mp4 — লম্বা রেকর্ডিং নিজে থেকে ভাগ করে নেবে</div>
+      <div class="t1" data-t="dropT1"></div>
+      <div class="t2" data-t="dropT2"></div>
       <input type="file" id="fileIn" accept="audio/*,video/mp4,.m4a,.mp3,.wav,.ogg,.webm" style="display:none">
     </div>
     <div class="prog" id="prog"><i></i></div>
     <div id="progTxt"></div>
     <div class="bar" style="margin-top:12px">
-      <button id="btnAI" class="warn">✨ AI দিয়ে সুন্দর করে সাজান</button>
-      <button id="btnCancel" class="ghost sm" style="display:none">✕ বাতিল</button>
-      <span class="hint" style="margin:0">ট্রান্সক্রিপ্ট তৈরি হলে এটি চাপুন — আলোচনা, সিদ্ধান্ত ও করণীয় নিজে থেকে সাজিয়ে দেবে।</span>
+      <button id="btnAI" class="warn"></button>
+      <button id="btnCancel" class="ghost sm" style="display:none"></button>
+      <span class="hint" style="margin:0" data-t="aiHint"></span>
     </div>
-    <div class="hint">📱 মোবাইলের রেকর্ডিং আপলোড করলে উপরের ট্রান্সক্রিপ্ট বক্সেই লেখা যুক্ত হবে (আগের লেখা মুছবে না)।</div>
+    <div class="hint" data-t="upHint"></div>
   </div>
 
-  <!-- 4. Online meeting -->
-  <div class="card" style="border-color:#0ea371; border-width:2px">
-    <h2><span class="n">৪</span> অনলাইন মিটিং — Google Meet / Zoom / Teams <span class="pill">নতুন</span></h2>
-    <div class="hint" style="margin-top:0">
-      Meet-এর ট্যাবের শব্দ ও আপনার মাইক — দুটোই একসাথে ধরা হবে। মিটিং চলাকালীনই প্রতি ৮ মিনিট পরপর লেখা তৈরি হতে থাকবে,
-      তাই শেষ হওয়ার প্রায় সাথে সাথেই কার্যবিবরণী তৈরি।
-    </div>
+  <!-- 4 -->
+  <div class="card" style="border-color:var(--brand2); border-width:2px">
+    <h2><span class="n">4</span><span data-t="s4">অনলাইন মিটিং</span></h2>
+    <div class="hint" style="margin-top:0" data-t="meetIntro"></div>
     <div class="bar" style="margin-top:12px">
-      <button id="btnMeet">🖥️ মিটিং ধরা শুরু করুন</button>
-      <button id="btnMeetStop" class="stop" disabled>■ মিটিং শেষ</button>
-      <div class="status"><span class="dot" id="mdot"></span><span id="mState">প্রস্তুত</span> · <span id="mTimer">00:00:00</span></div>
+      <button id="btnMeet"></button>
+      <button id="btnMeetStop" class="stop" disabled></button>
+      <div class="status"><span class="dot" id="mdot"></span><span id="mState"></span> · <span id="mTimer">00:00:00</span></div>
     </div>
     <label style="margin-top:12px"><input type="checkbox" id="autoFinish" checked style="width:auto">
-      মিটিং শেষ হলে নিজে থেকেই AI দিয়ে সাজিয়ে Word ফাইল ডাউনলোড করে দাও</label>
-    <div class="warnbox" style="background:#eff6ff; border-color:#bfdbfe; color:#1e40af">
-      <b>যেভাবে চাপবেন:</b> বাটন চাপলে Chrome একটা বাক্স দেখাবে →
-      <b>“Chrome Tab”</b> বেছে নিন → Google Meet-এর ট্যাবটি সিলেক্ট করুন →
-      নিচের বাঁ কোণে <b>“Also share tab audio”</b> সুইচটি অবশ্যই চালু করুন → <b>Share</b>।<br>
-      Zoom/Teams-এর ডেস্কটপ অ্যাপ ব্যবহার করলে <b>“Entire Screen”</b> বেছে <b>“Also share system audio”</b> চালু করুন।
-    </div>
+      <span data-t="autoFinish"></span></label>
+    <div class="infobox" data-th="meetHow"></div>
     <div id="meetInfo" class="hint"></div>
-    <div id="meetNoMobile" class="deskonly">
-      📱 <b>এই ফিচারটি ফোনে কাজ করে না।</b> মোবাইল ব্রাউজারে অন্য অ্যাপ বা ট্যাবের শব্দ ধরার সুযোগ নেই।<br>
-      অনলাইন মিটিং (Google Meet / Zoom / Teams) <b>কম্পিউটার থেকে</b> করুন। ফোনে সেকশন ২ (সরাসরি রেকর্ডিং)
-      বা সেকশন ৩ (রেকর্ডিং আপলোড) ব্যবহার করুন — ওগুলো ভালোভাবেই কাজ করে।
-    </div>
+    <div id="meetNoMobile" class="deskonly" data-th="meetNoMobile"></div>
   </div>
 
   <!-- AI summary -->
   <div class="card" id="sumCard" style="display:none">
-    <h2><span class="n">✦</span> সারসংক্ষেপ ও আলোচনা (AI)</h2>
-    <label>সারসংক্ষেপ</label>
+    <h2><span class="n">✦</span><span data-t="sSum">সারসংক্ষেপ ও আলোচনা</span></h2>
+    <label data-t="lSummary"></label>
     <textarea id="mSummary" rows="4"></textarea>
-    <label>বিষয়ভিত্তিক আলোচনা (এডিটযোগ্য)</label>
-    <textarea id="mDiscussion" rows="10" placeholder="বিষয়ের শিরোনাম&#10;- আলোচনার পয়েন্ট&#10;- আরেকটি পয়েন্ট"></textarea>
-    <div class="hint">শিরোনামের নিচে <b>-</b> দিয়ে পয়েন্ট লিখুন। Word ফাইলে শিরোনাম বোল্ড হয়ে আসবে।</div>
+    <label data-t="lDiscussion"></label>
+    <textarea id="mDiscussion" rows="10" data-tp="phDiscussion"></textarea>
+    <div class="hint" data-th="discHint"></div>
   </div>
 
   <div class="grid">
-    <!-- 3. Discussion / decisions -->
     <div class="card">
-      <h2><span class="n">৫</span> সিদ্ধান্তসমূহ</h2>
+      <h2><span class="n">5</span><span data-t="s5">সিদ্ধান্তসমূহ</span></h2>
       <div id="decisions"></div>
       <div class="bar" style="margin-top:8px">
-        <button class="ghost sm" onclick="addDecision('')">+ সিদ্ধান্ত যোগ করুন</button>
-        <button class="ghost sm" onclick="autoExtract()">⚡ ট্রান্সক্রিপ্ট থেকে খুঁজে দিন</button>
+        <button class="ghost sm" id="btnAddDec"></button>
+        <button class="ghost sm" id="btnExtract"></button>
       </div>
-      <div class="hint">“সিদ্ধান্ত”, “অনুমোদন”, “decided”, “approved” — এমন শব্দ থাকা বাক্য স্বয়ংক্রিয়ভাবে ধরা হয়।</div>
+      <div class="hint" data-t="decHint"></div>
     </div>
 
-    <!-- 4. Action items -->
     <div class="card">
-      <h2><span class="n">৬</span> করণীয় (Action Items)</h2>
+      <h2><span class="n">6</span><span data-t="s6">করণীয়</span></h2>
       <table class="mini">
-        <thead><tr><th style="width:44%">করণীয়</th><th style="width:26%">দায়িত্বপ্রাপ্ত</th><th style="width:22%">সময়সীমা</th><th></th></tr></thead>
+        <thead><tr>
+          <th style="width:44%" data-t="thTask"></th>
+          <th style="width:26%" data-t="thWho"></th>
+          <th style="width:22%" data-t="thDue"></th>
+          <th></th>
+        </tr></thead>
         <tbody id="actions"></tbody>
       </table>
       <div class="bar" style="margin-top:10px">
-        <button class="ghost sm" onclick="addAction('','','')">+ সারি যোগ করুন</button>
+        <button class="ghost sm" id="btnAddAct"></button>
       </div>
     </div>
   </div>
 
-  <!-- 5. Export -->
+  <!-- 7 -->
   <div class="card">
-    <h2><span class="n">৭</span> ফাইল তৈরি</h2>
+    <h2><span class="n">7</span><span data-t="s7">ফাইল তৈরি</span></h2>
     <div class="row">
       <div>
-        <label><input type="checkbox" id="incTranscript" checked style="width:auto"> সম্পূর্ণ আলোচনার বিবরণ (ট্রান্সক্রিপ্ট) যুক্ত করুন</label>
-        <label><input type="checkbox" id="incTime" checked style="width:auto"> ট্রান্সক্রিপ্টে সময় দেখান</label>
-        <label><input type="checkbox" id="incSign" checked style="width:auto"> স্বাক্ষরের ঘর যুক্ত করুন</label>
+        <label><input type="checkbox" id="incTranscript" checked style="width:auto"> <span data-t="optIncTr"></span></label>
+        <label><input type="checkbox" id="incTime" checked style="width:auto"> <span data-t="optIncTime"></span></label>
+        <label><input type="checkbox" id="incSign" checked style="width:auto"> <span data-t="optIncSign"></span></label>
       </div>
       <div>
-        <label>প্রতিষ্ঠানের নাম (হেডিং-এ যাবে)</label>
-        <input id="mOrg" placeholder="Synergy Bangladesh Ltd.">
+        <label data-t="lOrg"></label>
+        <input id="mOrg" data-tp="phOrg">
       </div>
     </div>
     <div class="exportbar">
-      <button id="btnDocx">📄 Word (.docx) ডাউনলোড</button>
-      <button id="btnAudio" class="ghost" disabled>🎧 অডিও সেভ করুন</button>
-      <button id="btnTxt" class="ghost">📝 শুধু ট্রান্সক্রিপ্ট (.txt)</button>
-      <button id="btnCopy" class="ghost">📋 কপি (AI দিয়ে সাজাতে)</button>
-      <span class="pill" id="wordCount">০ শব্দ</span>
+      <button id="btnDocx"></button>
+      <button id="btnAudio" class="ghost" disabled></button>
+      <button id="btnTxt" class="ghost"></button>
+      <button id="btnCopy" class="ghost"></button>
+      <span class="pill" id="wordCount"></span>
     </div>
   </div>
 
-  <div class="foot">অফলাইনেও কাজ করে (ভয়েস-টু-টেক্সট ছাড়া) · সব ডেটা শুধু আপনার কম্পিউটারে থাকে · কোনো সার্ভারে যায় না</div>
+  <div class="foot" data-t="foot"></div>
 </div>
 
 <script>
 /* ============================================================
-   অংশ ১ — অবস্থা (state)
+   PART 0 — dictionary (bn / en)
    ============================================================ */
-const S = { segs: [], decisions: [], actions: [], recording:false, paused:false, startedAt:0, elapsed:0 };
-const $ = id => document.getElementById(id);
-const bn = n => String(n).replace(/[0-9]/g, d => '০১২৩৪৫৬৭৮৯'[d]);
+const DICT = {
+bn:{
+ appName:'মিটিং মিনিটস রেকর্ডার',
+ appSub:'ভয়েস রেকর্ড → স্বয়ংক্রিয় ট্রান্সক্রিপ্ট → সুন্দর Word (.docx) ফাইল',
+ langBtn:'🌐 English', notSaved:'সেভ হয়নি', savedAt:'✓ সেভ হয়েছে ', saveFail:'সেভ করা যায়নি',
+ s1:'সভার তথ্য',
+ lTitle:'সভার শিরোনাম', phTitle:'যেমন: মাসিক ব্যবস্থাপনা সভা',
+ lNo:'সভা নং', phNo:'০৭/২০২৬',
+ lDate:'তারিখ', lTime:'সময়', phTime:'সকাল ১০:০০',
+ lVenue:'স্থান', phVenue:'কনফারেন্স রুম / Zoom',
+ lChair:'সভাপতি', lSec:'মিনিটস প্রস্তুতকারী', phName:'নাম ও পদবি',
+ lPresent:'উপস্থিত সদস্য (প্রতি লাইনে একজন)', phPresent:'১. মোঃ রহিম উদ্দিন — ব্যবস্থাপক\n২. Farhana Akter — HR Officer',
+ lAbsent:'অনুপস্থিত', phAbsent:'নাম (কারণসহ)',
+ lAgenda:'আলোচ্যসূচি (প্রতি লাইনে একটি)', phAgenda:'১. পূর্ববর্তী সভার কার্যবিবরণী অনুমোদন\n২. জুলাই মাসের বিক্রয় পর্যালোচনা\n৩. বিবিধ',
+ s2:'ভয়েস রেকর্ডিং',
+ lSpokenLang:'বলার ভাষা', lSpeaker:'বর্তমান বক্তা (ঐচ্ছিক)', phSpeaker:'যেমন: সভাপতি',
+ bStart:'● রেকর্ড শুরু', bResume:'▶ আবার শুরু', bPause:'⏸ বিরতি', bStop:'■ শেষ', bClear:'🗑 ট্রান্সক্রিপ্ট মুছুন',
+ stReady:'প্রস্তুত', stRec:'রেকর্ডিং চলছে', stPaused:'বিরতিতে', stDone:'শেষ হয়েছে', stMic:'মাইক্রোফোন অনুমতি দিন',
+ hintLang:'💡 ভাষা যেকোনো সময় বদলানো যায় — মিশ্র (বাংলা+ইংরেজি) সভায় বক্তা বদলালে ড্রপডাউন বদলে দিন, রেকর্ডিং থামবে না।',
+ hintEdit:'✏️ উপরের লেখা সরাসরি এডিট করা যায় — ভুল শব্দ ঠিক করে নিন।',
+ noSupport:'⚠️ এই ব্রাউজারে ভয়েস-টু-টেক্সট সাপোর্ট নেই। অনুগ্রহ করে <b>Google Chrome</b> বা <b>Microsoft Edge</b> দিয়ে ফাইলটি খুলুন এবং ইন্টারনেট সংযোগ রাখুন।',
+ micDenied:'মাইক্রোফোন ব্যবহারের অনুমতি দিতে হবে। ব্রাউজারের ঠিকানা বারের বাম পাশের 🔒 আইকনে ক্লিক করে Microphone → Allow করুন।',
+ confirmClear:'পুরো ট্রান্সক্রিপ্ট মুছে যাবে। নিশ্চিত?',
+ s3:'মোবাইলে রেকর্ড করা অডিও আপলোড করুন', pillFree:'ফ্রি',
+ setTitle:'⚙️ API সেটিংস (একবার সেট করলেই হবে)', keySet:'✓ সেট করা আছে', keyNone:'সেট করা নেই',
+ lService:'সার্ভিস', optGroq:'Groq (সস্তা ও দ্রুত)', optOpenai:'OpenAI',
+ lStt:'ট্রান্সক্রিপশন মডেল', lLlm:'সাজানোর মডেল (AI)', lAudioLang:'অডিওর ভাষা',
+ optAutoLang:'স্বয়ংক্রিয় (মিশ্র)', optBn:'বাংলা', optEn:'English',
+ bSaveKey:'💾 সেভ করুন', bTestKey:'🔌 কানেকশন পরীক্ষা', bSelfTest:'🧪 পূর্ণ পরীক্ষা চালান',
+ keyNote:'<b>💚 সম্পূর্ণ ফ্রি:</b> Groq-এর ফ্রি প্ল্যানে দিনে <b>৮ ঘণ্টা</b> অডিও লেখায় রূপান্তর করা যায় — কোনো কার্ড লাগে না। সীমা ছুঁয়ে গেলে অ্যাপ নিজেই অপেক্ষা করে আবার চেষ্টা করে।<br>Key নিন → Groq: <b>console.groq.com/keys</b> · OpenAI: <b>platform.openai.com/api-keys</b><br>🔒 Key শুধু আপনার ব্রাউজারে সেভ থাকে, অন্য কোথাও যায় না।',
+ dropT1:'অডিও ফাইল এখানে টেনে আনুন, বা ক্লিক করে বেছে নিন',
+ dropT2:'mp3 · m4a · wav · ogg · webm · mp4 — লম্বা রেকর্ডিং নিজে থেকে ভাগ করে নেবে',
+ bAI:'✨ AI দিয়ে সুন্দর করে সাজান', bCancel:'✕ বাতিল',
+ aiHint:'ট্রান্সক্রিপ্ট তৈরি হলে এটি চাপুন — আলোচনা, সিদ্ধান্ত ও করণীয় নিজে থেকে সাজিয়ে দেবে।',
+ upHint:'📱 মোবাইলের রেকর্ডিং আপলোড করলে উপরের ট্রান্সক্রিপ্ট বক্সেই লেখা যুক্ত হবে (আগের লেখা মুছবে না)।',
+ s4:'অনলাইন মিটিং — Google Meet / Zoom / Teams',
+ meetIntro:'Meet-এর ট্যাবের শব্দ ও আপনার মাইক — দুটোই একসাথে ধরা হবে। মিটিং চলাকালীনই প্রতি ৮ মিনিট পরপর লেখা তৈরি হতে থাকবে।',
+ bMeet:'🖥️ মিটিং ধরা শুরু করুন', bMeetStop:'■ মিটিং শেষ',
+ autoFinish:'মিটিং শেষ হলে নিজে থেকেই AI দিয়ে সাজিয়ে Word ফাইল ডাউনলোড করে দাও',
+ meetHow:'<b>যেভাবে চাপবেন:</b> বাটন চাপলে Chrome একটা বাক্স দেখাবে → <b>“Chrome Tab”</b> বেছে নিন → Google Meet-এর ট্যাবটি সিলেক্ট করুন → নিচের বাঁ কোণে <b>“Also share tab audio”</b> সুইচটি অবশ্যই চালু করুন → <b>Share</b>।<br>Zoom/Teams-এর ডেস্কটপ অ্যাপ হলে <b>“Entire Screen”</b> বেছে <b>“Also share system audio”</b> চালু করুন।',
+ meetNoMobile:'📱 <b>এই ফিচারটি ফোনে কাজ করে না।</b> মোবাইল ব্রাউজারে অন্য অ্যাপ বা ট্যাবের শব্দ ধরার সুযোগ নেই।<br>অনলাইন মিটিং <b>কম্পিউটার থেকে</b> করুন। ফোনে সেকশন ২ বা ৩ ব্যবহার করুন।',
+ meetDesktopOnly:'কম্পিউটারে ব্যবহার করুন', meetBoth:'🎙️ আপনার মাইক + 🔊 মিটিংয়ের শব্দ — দুটোই ধরা হচ্ছে।',
+ meetOnly:'🔊 শুধু মিটিংয়ের শব্দ ধরা হচ্ছে (মাইক্রোফোনের অনুমতি পাওয়া যায়নি)।',
+ meetRunning:'মিটিং ধরা হচ্ছে',
+ noShareApi:'এই ব্রাউজারে স্ক্রিন/ট্যাবের শব্দ ধরা যায় না। Google Chrome বা Edge ব্যবহার করুন।',
+ noAudioShared:'শব্দ শেয়ার করা হয়নি।\n\nআবার চেষ্টা করুন এবং শেয়ার করার বাক্সে নিচের বাঁ কোণের\n“Also share tab audio” (বা system audio) সুইচটি চালু করে তবেই Share চাপুন।',
+ sSum:'সারসংক্ষেপ ও আলোচনা (AI)', lSummary:'সারসংক্ষেপ', lDiscussion:'বিষয়ভিত্তিক আলোচনা (এডিটযোগ্য)',
+ phDiscussion:'বিষয়ের শিরোনাম\n- আলোচনার পয়েন্ট\n- আরেকটি পয়েন্ট',
+ discHint:'শিরোনামের নিচে <b>-</b> দিয়ে পয়েন্ট লিখুন। Word ফাইলে শিরোনাম বোল্ড হয়ে আসবে।',
+ s5:'সিদ্ধান্তসমূহ', bAddDec:'+ সিদ্ধান্ত যোগ করুন', bExtract:'⚡ ট্রান্সক্রিপ্ট থেকে খুঁজে দিন',
+ decHint:'“সিদ্ধান্ত”, “অনুমোদন”, “decided”, “approved” — এমন শব্দ থাকা বাক্য স্বয়ংক্রিয়ভাবে ধরা হয়।',
+ s6:'করণীয় (Action Items)', thTask:'করণীয়', thWho:'দায়িত্বপ্রাপ্ত', thDue:'সময়সীমা', bAddAct:'+ সারি যোগ করুন',
+ s7:'ফাইল তৈরি',
+ optIncTr:'সম্পূর্ণ আলোচনার বিবরণ (ট্রান্সক্রিপ্ট) যুক্ত করুন', optIncTime:'ট্রান্সক্রিপ্টে সময় দেখান',
+ optIncSign:'স্বাক্ষরের ঘর যুক্ত করুন', lOrg:'প্রতিষ্ঠানের নাম (হেডিং-এ যাবে)', phOrg:'Synergy Bangladesh Ltd.',
+ bDocx:'📄 Word (.docx) ডাউনলোড', bAudio:'🎧 অডিও সেভ করুন', bTxt:'📝 শুধু ট্রান্সক্রিপ্ট (.txt)', bCopy:'📋 কপি (AI দিয়ে সাজাতে)',
+ words:' শব্দ',
+ foot:'অফলাইনেও কাজ করে (ভয়েস-টু-টেক্সট ছাড়া) · সব ডেটা শুধু আপনার কম্পিউটারে থাকে',
+ needKey:'আগে API Key দিন (সেকশন ৩-এর ⚙️ অংশে)।', needAudio:'আগে রেকর্ড করুন বা অডিও আপলোড করুন।',
+ keyMissing:'✗ API Key দেওয়া নেই — উপরের ঘরে key বসিয়ে 💾 সেভ করুন।',
+ savedOk:'সেভ হয়েছে ✓', giveKey:'Key দিন', testing:'পরীক্ষা করা হচ্ছে…',
+ connOk:'কানেকশন ঠিক আছে ✓', connFail:'ব্যর্থ — Key ঠিক আছে কিনা দেখুন', netFail:'ইন্টারনেট/নেটওয়ার্ক সমস্যা',
+ reading:'অডিও ফাইল পড়া হচ্ছে…',
+ badFormat:'এই অডিও ফরম্যাট ব্রাউজার পড়তে পারছে না। mp3 / m4a / wav / ogg ফরম্যাটে চেষ্টা করুন।',
+ converting:'লেখায় রূপান্তর হচ্ছে… খণ্ড ', totalDur:'মোট ', partsDone:' অংশ। এখন “AI দিয়ে সাজান” চাপুন।',
+ doneMark:'✓ সম্পন্ন — ', problem:'সমস্যা: ', aiProblem:'AI সমস্যা: ',
+ cancelled:'বাতিল করা হয়েছে',
+ keyBad:'API Key ভুল বা মেয়াদোত্তীর্ণ', rateLimit:'সার্ভিসের সীমা ছাড়িয়ে গেছে — কিছুক্ষণ পর আবার চেষ্টা করুন',
+ tooBig:'এই অংশ খুব বড় — ট্রান্সক্রিপ্ট কিছুটা ছোট করুন', busy:'সার্ভিস বারবার ব্যস্ত — কিছুক্ষণ পর আবার চেষ্টা করুন',
+ waitFree:'ফ্রি সীমার জন্য অপেক্ষা —', waitHit:'ফ্রি সীমা ছুঁয়েছে, অপেক্ষা —', secs:' সেকেন্ড…',
+ aiWorking:'AI মিনিটস সাজাচ্ছে…', aiReading:'AI পড়ছে — অংশ ', aiMerging:'সব অংশ মিলিয়ে চূড়ান্ত কার্যবিবরণী তৈরি হচ্ছে…',
+ aiDone:'✓ সাজানো হয়েছে — নিচে দেখে নিন, দরকারে এডিট করুন।',
+ meetPart:'মিটিংয়ের অংশ ', meetPartTail:' লেখায় রূপান্তর হচ্ছে…', meetLeft:'আরও ', meetLeftTail:'টি বাকি',
+ partAdded:'✓ অংশ ', partAddedTail:' যুক্ত হয়েছে', docDone:'✓ কার্যবিবরণী তৈরি — Word ফাইল ডাউনলোড হয়েছে।',
+ noExtract:'স্পষ্ট সিদ্ধান্ত/করণীয় শনাক্ত করা যায়নি — হাতে যোগ করুন, অথবা “কপি” বাটন দিয়ে লেখা AI-কে দিয়ে সাজিয়ে নিন।',
+ emptyDoc:'এখনো কোনো তথ্য নেই। তবুও খালি ফাইল তৈরি করব?',
+ noAudioFile:'কোনো অডিও পাওয়া যায়নি।', copied:'কপি হয়েছে ✓ এখন Claude/ChatGPT-এ পেস্ট করে সাজিয়ে নিন।',
+ copyPrompt:'নিচের লেখা কপি করুন:', restore:'আগের অসম্পূর্ণ সভার খসড়া পাওয়া গেছে। ফিরিয়ে আনব?',
+ t1:'✓ ১/৪ — API Key ঠিক আছে', t1models:'টি মডেল পাওয়া গেছে', t1fail:'✗ ১/৪ — সংযোগ ব্যর্থ: ',
+ t2ok:'✓ ২/৪ — ট্রান্সক্রিপশন মডেল পাওয়া গেছে: ', t2bad:'⚠ ২/৪ — তালিকায় নেই: ',
+ t2llm:'⚠ AI মডেল তালিকায় নেই — সেটিংসে নাম বদলাতে হতে পারে: ',
+ t3ok:'✓ ৩/৪ — অডিও→লেখা সার্ভিস কাজ করছে', t3ms:' মিলিসেকেন্ডে সাড়া দিয়েছে', t3fail:'✗ ৩/৪ — অডিও→লেখা ব্যর্থ: ',
+ t4ok:'✓ ৪/৪ — AI কাজ করছে। নমুনা ফল: ', t4fail:'✗ ৪/৪ — AI ব্যর্থ: ',
+ tAllOk:'সব ঠিক আছে — অ্যাপ ব্যবহারের জন্য প্রস্তুত ✓', tStart:'পরীক্ষা শুরু… (১০–২০ সেকেন্ড)',
+ // Word document
+ dMinutes:'সভার কার্যবিবরণী', dMinutesSub:'সভার কার্যবিবরণী (Minutes of Meeting)',
+ dNo:'সভা নং', dDate:'তারিখ', dTime:'সময়', dVenue:'স্থান', dChair:'সভাপতি', dDuration:'সভার স্থিতিকাল',
+ dPresent:'উপস্থিত সদস্যবৃন্দ', dAbsent:'অনুপস্থিত', dAgenda:'আলোচ্যসূচি',
+ dSummary:'সারসংক্ষেপ', dDiscussion:'বিস্তারিত আলোচনা', dDecisions:'গৃহীত সিদ্ধান্তসমূহ',
+ dActions:'করণীয় ও দায়িত্ব বণ্টন', dSl:'ক্রম', dTask:'করণীয়', dWho:'দায়িত্বপ্রাপ্ত', dDue:'সময়সীমা',
+ dTranscript:'সংযুক্তি: আলোচনার সম্পূর্ণ বিবরণ', dPreparedBy:'প্রস্তুতকারী', dChairSign:'সভাপতি',
+ dPrepName:'মিনিটস প্রস্তুতকারী', dFileBase:'সভার-কার্যবিবরণী'
+},
+en:{
+ appName:'Meeting Minutes Recorder',
+ appSub:'Record voice → automatic transcript → polished Word (.docx) file',
+ langBtn:'🌐 বাংলা', notSaved:'Not saved', savedAt:'✓ Saved ', saveFail:'Could not save',
+ s1:'Meeting details',
+ lTitle:'Meeting title', phTitle:'e.g. Monthly Management Meeting',
+ lNo:'Meeting no.', phNo:'07/2026',
+ lDate:'Date', lTime:'Time', phTime:'10:00 AM',
+ lVenue:'Venue', phVenue:'Conference room / Zoom',
+ lChair:'Chairperson', lSec:'Minutes prepared by', phName:'Name and designation',
+ lPresent:'Attendees (one per line)', phPresent:'1. Md. Rahim Uddin — Manager\n2. Farhana Akter — HR Officer',
+ lAbsent:'Absent', phAbsent:'Name (with reason)',
+ lAgenda:'Agenda (one per line)', phAgenda:'1. Confirmation of previous minutes\n2. July sales review\n3. Any other business',
+ s2:'Voice recording',
+ lSpokenLang:'Spoken language', lSpeaker:'Current speaker (optional)', phSpeaker:'e.g. Chair',
+ bStart:'● Start recording', bResume:'▶ Resume', bPause:'⏸ Pause', bStop:'■ Stop', bClear:'🗑 Clear transcript',
+ stReady:'Ready', stRec:'Recording', stPaused:'Paused', stDone:'Finished', stMic:'Allow microphone',
+ hintLang:'💡 You can switch language any time — in mixed Bangla/English meetings just change the dropdown when the speaker switches; recording keeps running.',
+ hintEdit:'✏️ The text above is editable — fix any misheard words directly.',
+ noSupport:'⚠️ This browser does not support speech-to-text. Please open the file in <b>Google Chrome</b> or <b>Microsoft Edge</b> with an internet connection.',
+ micDenied:'Microphone permission is required. Click the 🔒 icon at the left of the address bar, then Microphone → Allow.',
+ confirmClear:'This will erase the whole transcript. Are you sure?',
+ s3:'Upload a recording made on your phone', pillFree:'Free',
+ setTitle:'⚙️ API settings (one-time setup)', keySet:'✓ Configured', keyNone:'Not configured',
+ lService:'Service', optGroq:'Groq (cheap & fast)', optOpenai:'OpenAI',
+ lStt:'Transcription model', lLlm:'Formatting model (AI)', lAudioLang:'Audio language',
+ optAutoLang:'Auto (mixed)', optBn:'Bangla', optEn:'English',
+ bSaveKey:'💾 Save', bTestKey:'🔌 Test connection', bSelfTest:'🧪 Run full test',
+ keyNote:'<b>💚 Completely free:</b> Groq’s free plan transcribes <b>8 hours</b> of audio per day — no card required. If a limit is hit the app waits and retries by itself.<br>Get a key → Groq: <b>console.groq.com/keys</b> · OpenAI: <b>platform.openai.com/api-keys</b><br>🔒 The key is stored only in your browser and goes nowhere else.',
+ dropT1:'Drag an audio file here, or click to choose one',
+ dropT2:'mp3 · m4a · wav · ogg · webm · mp4 — long recordings are split automatically',
+ bAI:'✨ Format nicely with AI', bCancel:'✕ Cancel',
+ aiHint:'Press this once the transcript is ready — discussion, decisions and action items get organised automatically.',
+ upHint:'📱 Uploaded recordings are added to the transcript box above (existing text is kept).',
+ s4:'Online meeting — Google Meet / Zoom / Teams',
+ meetIntro:'Captures the meeting tab’s audio together with your microphone. Text is produced every 8 minutes while the meeting is still running.',
+ bMeet:'🖥️ Start capturing the meeting', bMeetStop:'■ End meeting',
+ autoFinish:'When the meeting ends, format with AI and download the Word file automatically',
+ meetHow:'<b>How to do it:</b> After pressing the button Chrome shows a dialog → choose <b>“Chrome Tab”</b> → select the Google Meet tab → turn on <b>“Also share tab audio”</b> at the bottom left → <b>Share</b>.<br>For the Zoom/Teams desktop apps choose <b>“Entire Screen”</b> and turn on <b>“Also share system audio”</b>.',
+ meetNoMobile:'📱 <b>This feature does not work on phones.</b> Mobile browsers cannot capture audio from another app or tab.<br>Run online meetings <b>from a computer</b>. On the phone use section 2 or 3 instead.',
+ meetDesktopOnly:'Use on a computer', meetBoth:'🎙️ Your microphone + 🔊 meeting audio — both are being captured.',
+ meetOnly:'🔊 Capturing meeting audio only (microphone permission was not granted).',
+ meetRunning:'Capturing meeting',
+ noShareApi:'This browser cannot capture screen/tab audio. Please use Google Chrome or Edge.',
+ noAudioShared:'No audio was shared.\n\nTry again and make sure you turn on the “Also share tab audio” (or system audio) switch at the bottom left of the sharing dialog before pressing Share.',
+ sSum:'Summary and discussion (AI)', lSummary:'Summary', lDiscussion:'Discussion by topic (editable)',
+ phDiscussion:'Topic heading\n- discussion point\n- another point',
+ discHint:'Write points under a heading using <b>-</b>. Headings appear in bold in the Word file.',
+ s5:'Decisions', bAddDec:'+ Add a decision', bExtract:'⚡ Find them in the transcript',
+ decHint:'Sentences containing words like “decided”, “approved”, “সিদ্ধান্ত”, “অনুমোদন” are picked up automatically.',
+ s6:'Action items', thTask:'Task', thWho:'Responsible', thDue:'Deadline', bAddAct:'+ Add a row',
+ s7:'Create the file',
+ optIncTr:'Include the full transcript', optIncTime:'Show timestamps in the transcript',
+ optIncSign:'Include signature blocks', lOrg:'Organisation name (appears in the heading)', phOrg:'Synergy Bangladesh Ltd.',
+ bDocx:'📄 Download Word (.docx)', bAudio:'🎧 Save audio', bTxt:'📝 Transcript only (.txt)', bCopy:'📋 Copy (to format with AI)',
+ words:' words',
+ foot:'Works offline too (except speech-to-text) · All data stays on your computer',
+ needKey:'Please enter an API key first (⚙️ in section 3).', needAudio:'Record or upload some audio first.',
+ keyMissing:'✗ No API key — paste your key above and press 💾 Save.',
+ savedOk:'Saved ✓', giveKey:'Enter a key', testing:'Testing…',
+ connOk:'Connection is fine ✓', connFail:'Failed — check the key', netFail:'Internet/network problem',
+ reading:'Reading the audio file…',
+ badFormat:'The browser cannot read this audio format. Try mp3 / m4a / wav / ogg.',
+ converting:'Transcribing… part ', totalDur:'total ', partsDone:' segments. Now press “Format with AI”.',
+ doneMark:'✓ Done — ', problem:'Problem: ', aiProblem:'AI problem: ',
+ cancelled:'Cancelled',
+ keyBad:'API key is wrong or expired', rateLimit:'Service limit reached — try again shortly',
+ tooBig:'This part is too large — shorten the transcript a little', busy:'Service keeps being busy — try again shortly',
+ waitFree:'Waiting for the free limit —', waitHit:'Free limit reached, waiting —', secs:' seconds…',
+ aiWorking:'AI is writing the minutes…', aiReading:'AI is reading — part ', aiMerging:'Merging all parts into the final minutes…',
+ aiDone:'✓ Formatted — check below and edit if needed.',
+ meetPart:'Transcribing meeting part ', meetPartTail:'…', meetLeft:'', meetLeftTail:' more waiting',
+ partAdded:'✓ Part ', partAddedTail:' added', docDone:'✓ Minutes ready — the Word file has been downloaded.',
+ noExtract:'No clear decisions or action items were found — add them by hand, or use the Copy button and let an AI organise the text.',
+ emptyDoc:'There is no content yet. Create an empty file anyway?',
+ noAudioFile:'No audio was found.', copied:'Copied ✓ Now paste it into Claude/ChatGPT to organise it.',
+ copyPrompt:'Copy the text below:', restore:'An unfinished draft was found. Restore it?',
+ t1:'✓ 1/4 — API key works', t1models:' models found', t1fail:'✗ 1/4 — connection failed: ',
+ t2ok:'✓ 2/4 — transcription model found: ', t2bad:'⚠ 2/4 — not in the list: ',
+ t2llm:'⚠ AI model not in the list — you may need to change the name in settings: ',
+ t3ok:'✓ 3/4 — speech-to-text service works', t3ms:' ms response time', t3fail:'✗ 3/4 — speech-to-text failed: ',
+ t4ok:'✓ 4/4 — AI works. Sample result: ', t4fail:'✗ 4/4 — AI failed: ',
+ tAllOk:'Everything works — the app is ready to use ✓', tStart:'Starting the test… (10–20 seconds)',
+ dMinutes:'Minutes of Meeting', dMinutesSub:'Minutes of Meeting',
+ dNo:'Meeting no.', dDate:'Date', dTime:'Time', dVenue:'Venue', dChair:'Chairperson', dDuration:'Duration',
+ dPresent:'Members present', dAbsent:'Absent', dAgenda:'Agenda',
+ dSummary:'Summary', dDiscussion:'Discussion', dDecisions:'Decisions taken',
+ dActions:'Action items and responsibilities', dSl:'No.', dTask:'Task', dWho:'Responsible', dDue:'Deadline',
+ dTranscript:'Annex: full record of the discussion', dPreparedBy:'Prepared by', dChairSign:'Chairperson',
+ dPrepName:'Minutes taker', dFileBase:'Minutes-of-Meeting'
+}};
 
+let LANG = 'bn';
+const T = k => (DICT[LANG][k] !== undefined ? DICT[LANG][k] : (DICT.bn[k] || k));
+const $ = id => document.getElementById(id);
+
+/* বাংলা হলে বাংলা সংখ্যা, ইংরেজি হলে সাধারণ সংখ্যা */
+const num = n => LANG === 'bn' ? String(n).replace(/[0-9]/g, d => '০১২৩৪৫৬৭৮৯'[d]) : String(n);
+
+function applyLang(){
+  document.documentElement.lang = LANG;
+  document.title = T('appName');
+  document.querySelectorAll('[data-t]').forEach(el => el.textContent = T(el.dataset.t));
+  document.querySelectorAll('[data-th]').forEach(el => el.innerHTML = T(el.dataset.th));
+  document.querySelectorAll('[data-tp]').forEach(el => el.placeholder = T(el.dataset.tp));
+  const B = {btnLang:'langBtn', btnStart:'bStart', btnPause:'bPause', btnStop:'bStop', btnClear:'bClear',
+             btnSaveKey:'bSaveKey', btnTestKey:'bTestKey', btnSelfTest:'bSelfTest', btnAI:'bAI', btnCancel:'bCancel',
+             btnMeet:'bMeet', btnMeetStop:'bMeetStop', btnAddDec:'bAddDec', btnExtract:'bExtract', btnAddAct:'bAddAct',
+             btnDocx:'bDocx', btnAudio:'bAudio', btnTxt:'bTxt', btnCopy:'bCopy'};
+  for (const id in B) $(id).textContent = T(B[id]);
+  if (S.paused) $('btnStart').textContent = T('bResume');
+  $('keyState').textContent = $('apiKey').value ? T('keySet') : T('keyNone');
+  if (!S.recording && !S.paused) $('stateTxt').textContent = T('stReady');
+  if (!M.running) $('mState').textContent = $('btnMeet').disabled ? T('meetDesktopOnly') : T('stReady');
+  if (!$('autosave').dataset.stamp) $('autosave').textContent = T('notSaved');
+  renderTranscript(); renderActions(); countWords();
+  try { localStorage.setItem('mmr_lang', LANG); } catch(e){}
+}
+$('btnLang').onclick = () => { LANG = LANG === 'bn' ? 'en' : 'bn'; applyLang(); };
+
+/* ---- theme ---- */
+function setTheme(t){
+  document.documentElement.setAttribute('data-theme', t);
+  $('btnTheme').textContent = t === 'dark' ? '☀️' : '🌙';
+  try { localStorage.setItem('mmr_theme', t); } catch(e){}
+}
+$('btnTheme').onclick = () => setTheme(
+  document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+
+/* ============================================================
+   PART 1 — state
+   ============================================================ */
+const S = { segs:[], decisions:[], actions:[], recording:false, paused:false, startedAt:0, elapsed:0 };
 $('mDate').value = new Date().toISOString().slice(0,10);
 
 /* ============================================================
-   অংশ ২ — স্পিচ রিকগনিশন
+   PART 2 — live speech recognition
    ============================================================ */
 const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
 let rec = null, wantRunning = false, mediaRec = null, chunks = [], stream = null;
-
 if (!SR) { $('noSupport').style.display='block'; $('btnStart').disabled = true; }
 
 function buildRec(){
@@ -374,32 +599,25 @@ function buildRec(){
     let interim = '';
     for (let i = e.resultIndex; i < e.results.length; i++){
       const txt = e.results[i][0].transcript.trim();
-      if (e.results[i].isFinal){ if (txt) pushSeg(txt); }
-      else interim += txt + ' ';
+      if (e.results[i].isFinal){ if (txt) pushSeg(txt); } else interim += txt + ' ';
     }
     $('interim').textContent = interim;
   };
   r.onerror = ev => {
     if (ev.error === 'not-allowed'){
-      setState(false,false,'মাইক্রোফোন অনুমতি দিন');
-      wantRunning = false;
-      alert('মাইক্রোফোন ব্যবহারের অনুমতি দিতে হবে। ব্রাউজারের ঠিকানা বারের বাম পাশের 🔒 আইকনে ক্লিক করে Microphone → Allow করুন।');
+      setState(false,false,T('stMic')); wantRunning = false; alert(T('micDenied'));
     }
   };
   r.onend = () => { if (wantRunning) { try { r.start(); } catch(e){} } };
   return r;
 }
-
 function pushSeg(text){
   const sp = $('speaker').value.trim();
   S.segs.push({ t: S.elapsed + (S.recording && !S.paused ? Date.now()-S.startedAt : 0), sp, text });
-  renderTranscript();
-  autosave();
+  renderTranscript(); autosave();
 }
-
 function renderTranscript(){
-  const box = $('transcript');
-  const interim = $('interim');
+  const box = $('transcript'), interim = $('interim');
   box.querySelectorAll('.seg').forEach(n => n.remove());
   const frag = document.createDocumentFragment();
   S.segs.forEach((s,i) => {
@@ -414,8 +632,6 @@ function renderTranscript(){
   box.scrollTop = box.scrollHeight;
   countWords();
 }
-
-// এডিট করা লেখা state-এ ফেরত নেওয়া
 $('transcript').addEventListener('input', () => {
   document.querySelectorAll('#transcript .seg').forEach(n => {
     const i = +n.dataset.i, t = n.querySelector('.txt');
@@ -423,20 +639,18 @@ $('transcript').addEventListener('input', () => {
   });
   countWords(); autosave();
 });
-
 function hms(ms){
   const s = Math.floor(ms/1000);
   return [Math.floor(s/3600), Math.floor(s%3600/60), s%60].map(v=>String(v).padStart(2,'0')).join(':');
 }
-const esc = t => t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const esc = t => String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 
-/* ---- কন্ট্রোল ---- */
 $('btnStart').onclick = async () => {
-  if (S.paused){ // resume
+  if (S.paused){
     S.startedAt = Date.now(); S.paused = false; wantRunning = true;
     try { rec.start(); } catch(e){}
     if (mediaRec && mediaRec.state === 'paused') mediaRec.resume();
-    setState(true,false,'রেকর্ডিং চলছে'); return;
+    setState(true,false,T('stRec')); return;
   }
   try {
     stream = await navigator.mediaDevices.getUserMedia({ audio:true });
@@ -445,48 +659,41 @@ $('btnStart').onclick = async () => {
     mediaRec.ondataavailable = e => { if (e.data.size) chunks.push(e.data); };
     mediaRec.start();
     $('btnAudio').disabled = false;
-  } catch(e){ /* অডিও ব্যাকআপ ছাড়াও ট্রান্সক্রিপ্ট চলবে */ }
+  } catch(e){}
   rec = buildRec(); wantRunning = true;
   try { rec.start(); } catch(e){}
   S.startedAt = Date.now(); S.recording = true; S.paused = false;
-  setState(true,false,'রেকর্ডিং চলছে'); tick();
+  setState(true,false,T('stRec')); tick();
 };
-
 $('btnPause').onclick = () => {
   S.elapsed += Date.now() - S.startedAt; S.paused = true; wantRunning = false;
   try { rec.stop(); } catch(e){}
   if (mediaRec && mediaRec.state === 'recording') mediaRec.pause();
-  setState(true,true,'বিরতিতে');
+  setState(true,true,T('stPaused'));
 };
-
 $('btnStop').onclick = () => {
   if (!S.paused) S.elapsed += Date.now() - S.startedAt;
   S.recording = false; S.paused = false; wantRunning = false;
   try { rec.stop(); } catch(e){}
   if (mediaRec && mediaRec.state !== 'inactive') mediaRec.stop();
   if (stream) stream.getTracks().forEach(t => t.stop());
-  setState(false,false,'শেষ হয়েছে');
+  setState(false,false,T('stDone'));
   autoExtract();
 };
-
 $('btnClear').onclick = () => {
-  if (!confirm('পুরো ট্রান্সক্রিপ্ট মুছে যাবে। নিশ্চিত?')) return;
+  if (!confirm(T('confirmClear'))) return;
   S.segs = []; S.elapsed = 0; renderTranscript(); autosave();
 };
-
-$('lang').onchange = () => {
-  if (wantRunning && rec){ rec.lang = $('lang').value; try{ rec.stop(); }catch(e){} } // onend auto-restart
-};
+$('lang').onchange = () => { if (wantRunning && rec){ rec.lang = $('lang').value; try{ rec.stop(); }catch(e){} } };
 
 function setState(on, paused, txt){
   $('dot').className = 'dot' + (on ? (paused ? ' pause' : ' live') : '');
   $('stateTxt').textContent = txt;
   $('btnStart').disabled = on && !paused;
-  $('btnStart').textContent = paused ? '▶ আবার শুরু' : '● রেকর্ড শুরু';
+  $('btnStart').textContent = paused ? T('bResume') : T('bStart');
   $('btnPause').disabled = !on || paused;
   $('btnStop').disabled = !on;
 }
-
 function tick(){
   const cur = S.elapsed + (S.recording && !S.paused ? Date.now()-S.startedAt : 0);
   $('timer').textContent = hms(cur);
@@ -494,11 +701,9 @@ function tick(){
 }
 
 /* ============================================================
-   অংশ ৩ — সিদ্ধান্ত ও করণীয়
+   PART 3 — decisions & action items
    ============================================================ */
-function addDecision(v){
-  S.decisions.push(v||''); renderDecisions();
-}
+function addDecision(v){ S.decisions.push(v||''); renderDecisions(); }
 function renderDecisions(){
   const box = $('decisions'); box.innerHTML = '';
   S.decisions.forEach((d,i) => {
@@ -510,9 +715,7 @@ function renderDecisions(){
     row.append(inp, del); box.appendChild(row);
   });
 }
-function addAction(task, who, due){
-  S.actions.push({task:task||'', who:who||'', due:due||''}); renderActions();
-}
+function addAction(task, who, due){ S.actions.push({task:task||'', who:who||'', due:due||''}); renderActions(); }
 function renderActions(){
   const tb = $('actions'); tb.innerHTML = '';
   S.actions.forEach((a,i) => {
@@ -529,117 +732,97 @@ function renderActions(){
     td.appendChild(del); tr.appendChild(td); tb.appendChild(tr);
   });
 }
+$('btnAddDec').onclick = () => addDecision('');
+$('btnExtract').onclick = () => autoExtract();
+$('btnAddAct').onclick = () => addAction('','','');
 
-const DEC_KEYS = ['সিদ্ধান্ত','অনুমোদ','গৃহীত','সম্মত','পাস হ','decision','decided','approve','agreed','resolved','siddhanto','onumodon'];
-const ACT_KEYS = ['করতে হবে','দিতে হবে','নিতে হবে','দায়িত্ব','জমা দ','প্রস্তুত কর','ব্যবস্থা ন','পাঠাতে হবে','action','deadline','follow up','responsible','assign','submit by','korte hobe','deadline'];
-
+const DEC_KEYS = ['সিদ্ধান্ত','অনুমোদ','গৃহীত','সম্মত','পাস হ','decision','decided','approve','agreed','resolved'];
+const ACT_KEYS = ['করতে হবে','দিতে হবে','নিতে হবে','দায়িত্ব','জমা দ','প্রস্তুত কর','ব্যবস্থা ন','পাঠাতে হবে',
+                  'action','deadline','follow up','responsible','assign','submit by','will prepare','to be done'];
 function sentences(){
   return S.segs.map(s => s.text).join(' ')
     .split(/(?<=[।?!.])\s+/).map(t => t.trim()).filter(t => t.length > 8);
 }
 function autoExtract(){
-  const found = { d:0, a:0 };
+  let found = 0;
   sentences().forEach(sen => {
     const low = sen.toLowerCase();
     if (DEC_KEYS.some(k => low.includes(k))){
-      if (!S.decisions.includes(sen)){ S.decisions.push(sen); found.d++; }
+      if (!S.decisions.includes(sen)){ S.decisions.push(sen); found++; }
     } else if (ACT_KEYS.some(k => low.includes(k))){
-      if (!S.actions.some(a => a.task === sen)){ S.actions.push({task:sen, who:'', due:''}); found.a++; }
+      if (!S.actions.some(a => a.task === sen)){ S.actions.push({task:sen, who:'', due:''}); found++; }
     }
   });
   renderDecisions(); renderActions(); autosave();
-  if (found.d + found.a === 0 && S.segs.length)
-    alert('স্পষ্ট সিদ্ধান্ত/করণীয় শনাক্ত করা যায়নি — হাতে যোগ করুন, অথবা “কপি” বাটন দিয়ে লেখা AI-কে দিয়ে সাজিয়ে নিন।');
+  if (!found && S.segs.length) alert(T('noExtract'));
 }
-
 function countWords(){
   const w = S.segs.map(s=>s.text).join(' ').trim().split(/\s+/).filter(Boolean).length;
-  $('wordCount').textContent = bn(w) + ' শব্দ';
+  $('wordCount').textContent = num(w) + T('words');
 }
 
 /* ============================================================
-   অংশ ৩ক — API সেটিংস
+   PART 4 — API settings
    ============================================================ */
 const PRESETS = {
-  groq:   { base:'https://api.groq.com/openai/v1', stt:'whisper-large-v3',        llm:'llama-3.3-70b-versatile' },
-  openai: { base:'https://api.openai.com/v1',      stt:'whisper-1',               llm:'gpt-4o-mini' }
+  groq:   { base:'https://api.groq.com/openai/v1', stt:'whisper-large-v3', llm:'llama-3.3-70b-versatile' },
+  openai: { base:'https://api.openai.com/v1',      stt:'whisper-1',        llm:'gpt-4o-mini' }
 };
 function cfg(){
-  const p = $('provider').value;
+  const p = $('provider').value || 'groq';
   return { p, base: PRESETS[p].base, key: $('apiKey').value.trim(),
            stt: $('sttModel').value.trim() || PRESETS[p].stt,
            llm: $('llmModel').value.trim() || PRESETS[p].llm,
            lang: $('upLang').value };
 }
 function fillModels(){
-  const p = PRESETS[$('provider').value];
+  const p = PRESETS[$('provider').value || 'groq'];
   $('sttModel').value = p.stt; $('llmModel').value = p.llm;
 }
 $('provider').onchange = () => { fillModels(); saveCfg(); };
 function saveCfg(){
-  const c = { provider:$('provider').value, key:$('apiKey').value, stt:$('sttModel').value, llm:$('llmModel').value, lang:$('upLang').value };
+  const c = { provider:$('provider').value, key:$('apiKey').value, stt:$('sttModel').value,
+              llm:$('llmModel').value, lang:$('upLang').value };
   try { localStorage.setItem('mmr_cfg', JSON.stringify(c)); } catch(e){}
-  $('keyState').textContent = c.key ? '✓ সেট করা আছে (' + c.provider + ')' : 'সেট করা নেই';
+  $('keyState').textContent = c.key ? T('keySet') + ' (' + c.provider + ')' : T('keyNone');
   $('keyState').className = c.key ? 'ok' : '';
 }
-$('btnSaveKey').onclick = () => { saveCfg(); $('keyMsg').innerHTML = '<span class="ok">সেভ হয়েছে ✓</span>'; };
+$('btnSaveKey').onclick = () => { saveCfg(); $('keyMsg').innerHTML = '<span class="ok">' + T('savedOk') + '</span>'; };
 $('btnTestKey').onclick = async () => {
   const c = cfg();
-  if (!c.key) return $('keyMsg').innerHTML = '<span class="err">Key দিন</span>';
-  $('keyMsg').textContent = 'পরীক্ষা করা হচ্ছে…';
+  if (!c.key) return $('keyMsg').innerHTML = '<span class="err">' + T('giveKey') + '</span>';
+  $('keyMsg').textContent = T('testing');
   try {
     const r = await fetch(c.base + '/models', { headers:{ Authorization:'Bearer ' + c.key } });
-    $('keyMsg').innerHTML = r.ok ? '<span class="ok">কানেকশন ঠিক আছে ✓</span>'
-                                 : '<span class="err">ব্যর্থ (' + r.status + ') — Key ঠিক আছে কিনা দেখুন</span>';
-  } catch(e){ $('keyMsg').innerHTML = '<span class="err">ইন্টারনেট/নেটওয়ার্ক সমস্যা</span>'; }
+    $('keyMsg').innerHTML = r.ok ? '<span class="ok">' + T('connOk') + '</span>'
+                                 : '<span class="err">' + T('connFail') + ' (' + r.status + ')</span>';
+  } catch(e){ $('keyMsg').innerHTML = '<span class="err">' + T('netFail') + '</span>'; }
 };
-(function loadCfg(){
-  fillModels();
-  try {
-    const c = JSON.parse(localStorage.getItem('mmr_cfg') || 'null');
-    if (c){
-      $('provider').value = c.provider || 'groq'; fillModels();
-      $('apiKey').value = c.key || $('apiKey').value;   // সেভ করা key না থাকলে ফাইলে বসানো key-ই থাকবে
-      if (c.stt) $('sttModel').value = c.stt;
-      if (c.llm) $('llmModel').value = c.llm;
-      $('upLang').value = c.lang || '';
-    }
-  } catch(e){}
-  saveCfg();
-  if (!$('apiKey').value) $('apiBox').open = true;
-})();
 ['apiKey','sttModel','llmModel','upLang'].forEach(id => $(id).addEventListener('change', saveCfg));
 
 /* ============================================================
-   অংশ ৩খ — অডিও ফাইল → টেক্সট (Whisper)
+   PART 5 — audio file → text
    ============================================================ */
 let aborter = null;
 function setProg(pct, txt){
   const p = $('prog'), t = $('progTxt');
-  if (pct == null){ p.style.display = 'none'; t.style.display = 'none'; $('btnCancel').style.display='none'; return; }
+  if (pct == null){ p.style.display='none'; t.style.display='none'; $('btnCancel').style.display='none'; return; }
   p.style.display = 'block'; t.style.display = 'block';
   p.firstElementChild.style.width = Math.max(2, Math.min(100, pct)) + '%';
   t.innerHTML = txt;
 }
-
 async function decodeToMono16k(file){
   const ab = await file.arrayBuffer();
   const AC = window.AudioContext || window.webkitAudioContext;
-  const ac = new AC();
-  let buf;
-  try { buf = await ac.decodeAudioData(ab); }
-  finally { ac.close(); }
+  const ac = new AC(); let buf;
+  try { buf = await ac.decodeAudioData(ab); } finally { ac.close(); }
   const off = new OfflineAudioContext(1, Math.max(1, Math.ceil(buf.duration * 16000)), 16000);
   const src = off.createBufferSource(); src.buffer = buf; src.connect(off.destination); src.start();
-  const out = await off.startRendering();
-  return out.getChannelData(0);
+  return (await off.startRendering()).getChannelData(0);
 }
-
-// নীরব জায়গা খুঁজে ভাগ করা — শব্দের মাঝখানে কাটা পড়ে না
 function splitPoints(pcm, sr, chunkSec){
   const step = chunkSec * sr, win = Math.floor(sr * 0.25), search = 20 * sr;
-  const pts = [0];
-  let target = step;
+  const pts = [0]; let target = step;
   while (target < pcm.length - sr){
     let best = target, bestE = Infinity;
     const from = Math.max(pts[pts.length-1] + sr*30, target - search);
@@ -654,7 +837,6 @@ function splitPoints(pcm, sr, chunkSec){
   pts.push(pcm.length);
   return pts;
 }
-
 function encodeWav(pcm, sr){
   const n = pcm.length, buf = new ArrayBuffer(44 + n*2), v = new DataView(buf);
   const wr = (o,s) => { for (let i=0;i<s.length;i++) v.setUint8(o+i, s.charCodeAt(i)); };
@@ -665,7 +847,6 @@ function encodeWav(pcm, sr){
   for (let i=0;i<n;i++){ let s = Math.max(-1, Math.min(1, pcm[i])); v.setInt16(44+i*2, s<0 ? s*0x8000 : s*0x7FFF, true); }
   return new Blob([buf], { type:'audio/wav' });
 }
-
 async function sttCall(wav, format){
   const c = cfg();
   const fd = new FormData();
@@ -673,21 +854,18 @@ async function sttCall(wav, format){
   fd.append('model', c.stt);
   fd.append('response_format', format);
   if (c.lang) fd.append('language', c.lang);
-  if (format === 'verbose_json')
-    fd.append('prompt', 'এটি একটি অফিস মিটিংয়ের রেকর্ডিং। বাংলা ও ইংরেজি মিশ্রভাবে ব্যবহৃত হয়েছে।');
+  if (format === 'verbose_json') fd.append('prompt', 'Office meeting recording. Bangla and English are mixed.');
   return fetch(c.base + '/audio/transcriptions', {
-    method:'POST', headers:{ Authorization:'Bearer ' + c.key }, body: fd, signal: aborter.signal
-  });
+    method:'POST', headers:{ Authorization:'Bearer ' + c.key }, body: fd, signal: aborter.signal });
 }
-
 async function transcribeChunk(wav, offsetSec){
   let r = await sttCall(wav, 'verbose_json');
-  if (!r.ok && (r.status === 400 || r.status === 422)) r = await sttCall(wav, 'json'); // কিছু মডেল verbose_json নেয় না
+  if (!r.ok && (r.status === 400 || r.status === 422)) r = await sttCall(wav, 'json');
   if (!r.ok){
     let msg = r.status + '';
     try { const j = await r.json(); msg = (j.error && j.error.message) || msg; } catch(e){}
-    if (r.status === 401) msg = 'API Key ভুল বা মেয়াদোত্তীর্ণ';
-    if (r.status === 429) msg = 'সার্ভিসের সীমা ছাড়িয়ে গেছে — কিছুক্ষণ পর আবার চেষ্টা করুন';
+    if (r.status === 401) msg = T('keyBad');
+    if (r.status === 429) msg = T('rateLimit');
     throw new Error(msg);
   }
   const j = await r.json();
@@ -697,44 +875,34 @@ async function transcribeChunk(wav, offsetSec){
   const txt = (j.text || '').trim();
   return txt ? [{ t: offsetSec*1000, sp:'', text: txt }] : [];
 }
-
 async function handleFile(file){
-  const c = cfg();
-  if (!c.key){ $('apiBox').open = true; $('keyMsg').innerHTML = '<span class="err">আগে API Key দিন</span>'; return; }
+  if (!cfg().key){ $('apiBox').open = true; $('keyMsg').innerHTML = '<span class="err">'+T('needKey')+'</span>'; return; }
   aborter = new AbortController();
   $('btnCancel').style.display = 'inline-block';
   try {
-    setProg(3, 'অডিও ফাইল পড়া হচ্ছে…');
+    setProg(3, T('reading'));
     let pcm;
-    try { pcm = await decodeToMono16k(file); }
-    catch(e){ throw new Error('এই অডিও ফরম্যাট ব্রাউজার পড়তে পারছে না। mp3 / m4a / wav / ogg ফরম্যাটে চেষ্টা করুন।'); }
+    try { pcm = await decodeToMono16k(file); } catch(e){ throw new Error(T('badFormat')); }
     const sr = 16000, dur = pcm.length / sr;
-    const pts = splitPoints(pcm, sr, 600);           // ~১০ মিনিটের খণ্ড
+    const pts = splitPoints(pcm, sr, 600);
     const total = pts.length - 1;
-    if (!$('mTime').value && file.lastModified)
-      $('mTime').value = new Date(file.lastModified).toLocaleTimeString('bn-BD', {hour:'2-digit', minute:'2-digit'});
-
     for (let i = 0; i < total; i++){
-      if (aborter.signal.aborted) throw new Error('বাতিল করা হয়েছে');
-      setProg(5 + 92*i/total, 'লেখায় রূপান্তর হচ্ছে… খণ্ড ' + bn(i+1) + '/' + bn(total) +
-        ' <span style="color:#64748b;font-weight:400">(মোট ' + hms(dur*1000) + ')</span>');
-      const part = pcm.subarray(pts[i], pts[i+1]);
-      const segs = await transcribeChunk(encodeWav(part, sr), pts[i]/sr);
+      if (aborter.signal.aborted) throw new Error(T('cancelled'));
+      setProg(5 + 92*i/total, T('converting') + num(i+1) + '/' + num(total) +
+        ' <span style="opacity:.7;font-weight:400">(' + T('totalDur') + hms(dur*1000) + ')</span>');
+      const segs = await transcribeChunk(encodeWav(pcm.subarray(pts[i], pts[i+1]), sr), pts[i]/sr);
       S.segs.push(...segs);
       renderTranscript(); autosave();
     }
     S.elapsed = Math.max(S.elapsed, dur*1000);
     $('timer').textContent = hms(S.elapsed);
-    setProg(100, '<span class="ok">✓ সম্পন্ন — ' + bn(S.segs.length) + ' অংশ। এখন “AI দিয়ে সাজান” চাপুন।</span>');
+    setProg(100, '<span class="ok">' + T('doneMark') + num(S.segs.length) + T('partsDone') + '</span>');
     setTimeout(() => setProg(null), 6000);
     autoExtract();
   } catch(e){
-    setProg(100, '<span class="err">সমস্যা: ' + esc(e.message || String(e)) + '</span>');
-  } finally {
-    $('btnCancel').style.display = 'none'; aborter = null;
-  }
+    setProg(100, '<span class="err">' + T('problem') + esc(e.message || String(e)) + '</span>');
+  } finally { $('btnCancel').style.display = 'none'; aborter = null; }
 }
-
 $('btnCancel').onclick = () => { if (aborter) aborter.abort(); };
 $('drop').onclick = () => $('fileIn').click();
 $('fileIn').onchange = e => { if (e.target.files[0]) handleFile(e.target.files[0]); e.target.value=''; };
@@ -743,12 +911,11 @@ $('fileIn').onchange = e => { if (e.target.files[0]) handleFile(e.target.files[0
 $('drop').addEventListener('drop', e => { const f = e.dataTransfer.files[0]; if (f) handleFile(f); });
 
 /* ============================================================
-   অংশ ৩ঘ — অনলাইন মিটিং (Google Meet / Zoom / Teams) সরাসরি ধরা
+   PART 6 — online meeting capture
    ============================================================ */
 const M = { display:null, mic:null, ac:null, dest:null, rec:null, chunks:[], rot:null,
             running:false, started:0, offset:0, queue:[], busy:false, parts:0 };
-const SEG_MIN = 8;                                   // প্রতি ৮ মিনিটে এক খণ্ড
-
+const SEG_MIN = 8;
 function mimeType(){
   const list = ['audio/webm;codecs=opus','audio/webm','audio/ogg;codecs=opus','audio/mp4'];
   for (const m of list) if (window.MediaRecorder && MediaRecorder.isTypeSupported(m)) return m;
@@ -759,74 +926,54 @@ function meetState(on, txt){
   $('mState').textContent = txt;
   $('btnMeet').disabled = on; $('btnMeetStop').disabled = !on;
 }
-
 async function startMeet(){
-  if (!cfg().key){ $('apiBox').open = true; return alert('আগে API Key দিন (সেকশন ৩-এর ⚙️ অংশে)।'); }
-  if (!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia)
-    return alert('এই ব্রাউজারে স্ক্রিন/ট্যাবের শব্দ ধরা যায় না। Google Chrome বা Edge ব্যবহার করুন।');
+  if (!cfg().key){ $('apiBox').open = true; return alert(T('needKey')); }
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia) return alert(T('noShareApi'));
   let display;
   try {
     display = await navigator.mediaDevices.getDisplayMedia({
       video: { displaySurface:'browser' },
       audio: { echoCancellation:false, noiseSuppression:false, autoGainControl:false },
-      systemAudio: 'include', selfBrowserSurface: 'exclude'
-    });
-  } catch(e){ return; }                                // ব্যবহারকারী বাতিল করেছেন
+      systemAudio: 'include', selfBrowserSurface: 'exclude' });
+  } catch(e){ return; }
   if (!display.getAudioTracks().length){
     display.getTracks().forEach(t => t.stop());
-    return alert('শব্দ শেয়ার করা হয়নি।\n\nআবার চেষ্টা করুন এবং শেয়ার করার বাক্সে নিচের বাঁ কোণের\n“Also share tab audio” (বা system audio) সুইচটি চালু করে তবেই Share চাপুন।');
+    return alert(T('noAudioShared'));
   }
   let mic = null;
-  try { mic = await navigator.mediaDevices.getUserMedia({ audio:{ echoCancellation:true, noiseSuppression:true } }); }
-  catch(e){ /* মাইক ছাড়াও চলবে — শুধু অন্যদের কথা রেকর্ড হবে */ }
-
+  try { mic = await navigator.mediaDevices.getUserMedia({ audio:{ echoCancellation:true, noiseSuppression:true } }); } catch(e){}
   const AC = window.AudioContext || window.webkitAudioContext;
   M.ac = new AC(); M.dest = M.ac.createMediaStreamDestination();
-  const join = (stream, gain) => {
-    const g = M.ac.createGain(); g.gain.value = gain;
-    M.ac.createMediaStreamSource(stream).connect(g).connect(M.dest);
-  };
-  join(display, 1.0);
-  if (mic) join(mic, 0.9);
-
+  const join = (s, g) => { const gn = M.ac.createGain(); gn.gain.value = g; M.ac.createMediaStreamSource(s).connect(gn).connect(M.dest); };
+  join(display, 1.0); if (mic) join(mic, 0.9);
   M.display = display; M.mic = mic; M.running = true;
   M.started = Date.now(); M.offset = 0; M.parts = 0;
-  $('meetInfo').innerHTML = mic ? '🎙️ আপনার মাইক + 🔊 মিটিংয়ের শব্দ — দুটোই ধরা হচ্ছে।'
-                                : '🔊 শুধু মিটিংয়ের শব্দ ধরা হচ্ছে (মাইক্রোফোনের অনুমতি পাওয়া যায়নি)।';
+  $('meetInfo').innerHTML = mic ? T('meetBoth') : T('meetOnly');
   display.getVideoTracks()[0].addEventListener('ended', () => { if (M.running) stopMeet(); });
-  meetState(true, 'মিটিং ধরা হচ্ছে');
-  meetTick();
-  startSegment();
+  meetState(true, T('meetRunning'));
+  meetTick(); startSegment();
 }
-
 function startSegment(){
-  const mt = mimeType();
-  M.chunks = [];
+  const mt = mimeType(); M.chunks = [];
   M.rec = new MediaRecorder(M.dest.stream, mt ? { mimeType: mt } : undefined);
   M.rec.ondataavailable = e => { if (e.data && e.data.size) M.chunks.push(e.data); };
   M.rec.onstop = () => {
-    if (M.chunks.length){
-      M.queue.push(new Blob(M.chunks, { type: M.rec.mimeType || 'audio/webm' }));
-      drainQueue();
-    }
+    if (M.chunks.length){ M.queue.push(new Blob(M.chunks, { type: M.rec.mimeType || 'audio/webm' })); drainQueue(); }
     if (M.running) startSegment();
   };
   M.rec.start();
   M.rot = setTimeout(() => { if (M.rec && M.rec.state === 'recording') M.rec.stop(); }, SEG_MIN * 60 * 1000);
 }
-
 function stopMeet(){
-  M.running = false;
-  clearTimeout(M.rot);
+  M.running = false; clearTimeout(M.rot);
   try { if (M.rec && M.rec.state !== 'inactive') M.rec.stop(); } catch(e){}
   [M.display, M.mic].forEach(s => { if (s) s.getTracks().forEach(t => t.stop()); });
   if (M.ac) { try { M.ac.close(); } catch(e){} }
-  meetState(false, 'শেষ হয়েছে');
+  meetState(false, T('stDone'));
   S.elapsed = Math.max(S.elapsed, Date.now() - M.started);
   $('timer').textContent = hms(S.elapsed);
   setTimeout(() => drainQueue(true), 400);
 }
-
 async function drainQueue(finishing){
   if (M.busy){ if (finishing) M.finishAfter = true; return; }
   if (!M.queue.length){
@@ -834,32 +981,28 @@ async function drainQueue(finishing){
     return;
   }
   M.busy = true;
-  const blob = M.queue.shift();
-  M.parts++;
+  const blob = M.queue.shift(); M.parts++;
   const keep = aborter;
   aborter = aborter || new AbortController();
   try {
-    setProg(40, 'মিটিংয়ের অংশ ' + bn(M.parts) + ' লেখায় রূপান্তর হচ্ছে…' +
-      (M.queue.length ? ' (আরও ' + bn(M.queue.length) + 'টি বাকি)' : ''));
+    setProg(40, T('meetPart') + num(M.parts) + T('meetPartTail') +
+      (M.queue.length ? ' (' + T('meetLeft') + num(M.queue.length) + T('meetLeftTail') + ')' : ''));
     const pcm = await decodeToMono16k(blob);
     const sr = 16000, pts = splitPoints(pcm, sr, 600);
     for (let i = 0; i < pts.length - 1; i++){
       const segs = await transcribeChunk(encodeWav(pcm.subarray(pts[i], pts[i+1]), sr), M.offset + pts[i]/sr);
-      S.segs.push(...segs);
-      renderTranscript();
+      S.segs.push(...segs); renderTranscript();
     }
-    M.offset += pcm.length / sr;
-    autosave();
-    setProg(100, '<span class="ok">✓ অংশ ' + bn(M.parts) + ' যুক্ত হয়েছে</span>');
+    M.offset += pcm.length / sr; autosave();
+    setProg(100, '<span class="ok">' + T('partAdded') + num(M.parts) + T('partAddedTail') + '</span>');
     if (M.running) setTimeout(() => setProg(null), 4000);
   } catch(e){
-    setProg(100, '<span class="err">অংশ ' + bn(M.parts) + ' সমস্যা: ' + esc(e.message || String(e)) + '</span>');
+    setProg(100, '<span class="err">' + T('problem') + esc(e.message || String(e)) + '</span>');
   } finally {
     aborter = keep; M.busy = false;
     drainQueue(finishing || M.finishAfter);
   }
 }
-
 async function afterMeeting(){
   setProg(null);
   if (!S.segs.length) return;
@@ -868,11 +1011,10 @@ async function afterMeeting(){
   await aiStructure();
   if (S.decisions.length || S.actions.length || $('mSummary').value.trim()){
     save(makeDocxBlob(), fileBase() + '.docx');
-    setProg(100, '<span class="ok">✓ কার্যবিবরণী তৈরি — Word ফাইল ডাউনলোড হয়েছে।</span>');
+    setProg(100, '<span class="ok">' + T('docDone') + '</span>');
     setTimeout(() => setProg(null), 8000);
   }
 }
-
 function meetTick(){
   if (!M.running) return;
   $('mTimer').textContent = hms(Date.now() - M.started);
@@ -884,124 +1026,66 @@ function meetTick(){
   if (noShare || small){
     $('meetNoMobile').style.display = 'block';
     $('btnMeet').disabled = true; $('btnMeetStop').disabled = true;
-    $('mState').textContent = 'কম্পিউটারে ব্যবহার করুন';
   }
 })();
 $('btnMeet').onclick = startMeet;
 $('btnMeetStop').onclick = stopMeet;
 
 /* ============================================================
-   অংশ ৩ঙ — পূর্ণ পরীক্ষা (সত্যিকারের রিকোয়েস্ট পাঠিয়ে)
+   PART 7 — AI formatting
    ============================================================ */
-$('btnSelfTest').onclick = async () => {
-  const out = $('testOut'); out.style.display = 'block'; out.innerHTML = '';
-  const line = (t, cls) => out.innerHTML += '<div>' + (cls ? '<span class="'+cls+'">'+t+'</span>' : t) + '</div>';
-  const c = cfg();
-  if (!c.key){ line('✗ API Key দেওয়া নেই — উপরের ঘরে key বসিয়ে 💾 সেভ করুন।', 'err'); return; }
-  aborter = new AbortController();
-  line('পরীক্ষা শুরু… (১০–২০ সেকেন্ড)');
-
-  // ১. Key
-  try {
-    const r = await fetch(c.base + '/models', { headers:{ Authorization:'Bearer ' + c.key } });
-    if (!r.ok) throw new Error('HTTP ' + r.status + (r.status === 401 ? ' — Key ভুল' : ''));
-    const j = await r.json();
-    const ids = (j.data || []).map(m => m.id);
-    line('✓ ১/৪ — API Key ঠিক আছে (' + c.p + ', ' + bn(ids.length) + 'টি মডেল পাওয়া গেছে)', 'ok');
-    line(ids.includes(c.stt) ? '✓ ২/৪ — ট্রান্সক্রিপশন মডেল “' + c.stt + '” পাওয়া গেছে'
-                             : '⚠ ২/৪ — “' + c.stt + '” তালিকায় নেই, নাম ঠিক আছে কিনা দেখুন',
-         ids.includes(c.stt) ? 'ok' : 'err');
-    if (!ids.includes(c.llm)) line('⚠ AI মডেল “' + c.llm + '” তালিকায় নেই — সেটিংসে নাম বদলাতে হতে পারে।', 'err');
-  } catch(e){ line('✗ ১/৪ — সংযোগ ব্যর্থ: ' + esc(e.message), 'err'); return; }
-
-  // ২. ট্রান্সক্রিপশন (২ সেকেন্ডের পরীক্ষামূলক অডিও)
-  try {
-    const sr = 16000, n = sr*2, pcm = new Float32Array(n);
-    for (let i=0;i<n;i++) pcm[i] = Math.sin(2*Math.PI*220*i/sr) * 0.25 * Math.sin(Math.PI*i/n);
-    const t0 = Date.now();
-    const segs = await transcribeChunk(encodeWav(pcm, sr), 0);
-    line('✓ ৩/৪ — অডিও→লেখা সার্ভিস কাজ করছে (' + bn(Date.now()-t0) + ' মিলিসেকেন্ডে সাড়া দিয়েছে)', 'ok');
-  } catch(e){ line('✗ ৩/৪ — অডিও→লেখা ব্যর্থ: ' + esc(e.message), 'err'); }
-
-  // ৩. AI (JSON)
-  try {
-    nextCallAt = 0;
-    const d = await chatJSON('শুধু JSON দাও।', 'এই বাক্য থেকে সিদ্ধান্ত বের করো: "সিদ্ধান্ত হলো আগামী রবিবার রিপোর্ট জমা দিতে হবে।" ফরম্যাট: {"decisions":[""]}');
-    const got = (d.decisions && d.decisions[0]) || '(খালি)';
-    line('✓ ৪/৪ — AI কাজ করছে। নমুনা ফল: “' + esc(String(got).slice(0,60)) + '”', 'ok');
-    line('<b class="ok">সব ঠিক আছে — অ্যাপ ব্যবহারের জন্য প্রস্তুত ✓</b>');
-  } catch(e){ line('✗ ৪/৪ — AI ব্যর্থ: ' + esc(e.message), 'err'); }
-  aborter = null;
-};
-
-/* ============================================================
-   অংশ ৩গ — AI দিয়ে মিনিটস সাজানো
-   ============================================================ */
-const AI_RULES =
-'তুমি একজন অভিজ্ঞ অফিস সচিব। কাঁচা মিটিং ট্রান্সক্রিপ্ট থেকে পেশাদার "সভার কার্যবিবরণী" তৈরি করো। ' +
-'ট্রান্সক্রিপ্টে ভুল শোনা শব্দ থাকতে পারে — প্রসঙ্গ বুঝে ঠিক করে নাও। ' +
-'যে ভাষায় সভা হয়েছে সেই ভাষাতেই লেখো (মিশ্র হলে বাংলা প্রধান রাখো, ইংরেজি পরিভাষা যেমন আছে তেমন রাখো)। ' +
-'কোনো তথ্য বানিয়ে লিখবে না। শুধু JSON দাও, অন্য কিছু লিখবে না।\n';
-const AI_MAP = AI_RULES +
-'এটি ট্রান্সক্রিপ্টের একটি অংশ। এই অংশ থেকে কাঠামো বের করো:\n' +
-'{"discussion":[{"topic":"","points":[""]}],"decisions":[""],"actions":[{"task":"","who":"","due":""}]}';
-const AI_FULL = AI_RULES +
-'সম্পূর্ণ কার্যবিবরণী তৈরি করো:\n' +
-'{"title":"","summary":"","agenda":[""],"discussion":[{"topic":"","points":[""]}],' +
-'"decisions":[""],"actions":[{"task":"","who":"","due":""}],"attendees":[""]}';
-const AI_REDUCE = AI_RULES +
-'নিচে একই সভার বিভিন্ন অংশ থেকে নেওয়া নোট দেওয়া আছে। একই বিষয় একাধিকবার থাকলে মিলিয়ে এক করো, ' +
-'ধারাবাহিকভাবে সাজাও, এবং সম্পূর্ণ কার্যবিবরণী দাও:\n' +
-'{"title":"","summary":"","agenda":[""],"discussion":[{"topic":"","points":[""]}],' +
-'"decisions":[""],"actions":[{"task":"","who":"","due":""}],"attendees":[""]}';
+function aiRules(){
+  const outLang = LANG === 'bn' ? 'বাংলায় লেখো (ইংরেজি পরিভাষা যেমন আছে তেমন রাখো)'
+                                : 'Write in English (keep technical terms as spoken)';
+  return 'You are an experienced office secretary turning a raw meeting transcript into professional minutes. ' +
+         'The transcript may contain misheard words — correct them from context. ' + outLang + '. ' +
+         'Never invent facts. Reply with JSON only.\n';
+}
+const SCHEMA_FULL = '{"title":"","summary":"","agenda":[""],"discussion":[{"topic":"","points":[""]}],' +
+                    '"decisions":[""],"actions":[{"task":"","who":"","due":""}],"attendees":[""]}';
+const SCHEMA_MAP  = '{"discussion":[{"topic":"","points":[""]}],"decisions":[""],"actions":[{"task":"","who":"","due":""}]}';
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
-const estTokens = s => Math.ceil(s.length / 2.2) + 600;   // বাংলার জন্য রক্ষণশীল হিসাব
+const estTokens = s => Math.ceil(s.length / 2.2) + 600;
 let nextCallAt = 0;
 
 async function waitUntil(ts, why){
   while (Date.now() < ts){
-    if (aborter && aborter.signal.aborted) throw new Error('বাতিল করা হয়েছে');
-    setProg(50, why + ' <b>' + Math.ceil((ts - Date.now())/1000) + '</b> সেকেন্ড…');
+    if (aborter && aborter.signal.aborted) throw new Error(T('cancelled'));
+    setProg(50, why + ' <b>' + num(Math.ceil((ts - Date.now())/1000)) + '</b>' + T('secs'));
     await sleep(500);
   }
 }
-
 async function chatJSON(system, user){
   const c = cfg();
   const tok = estTokens(system + user);
-  await waitUntil(nextCallAt, 'ফ্রি সীমার জন্য অপেক্ষা —');
+  await waitUntil(nextCallAt, T('waitFree'));
   for (let attempt = 0; attempt < 5; attempt++){
     const r = await fetch(c.base + '/chat/completions', {
       method:'POST', signal: aborter.signal,
       headers:{ 'Content-Type':'application/json', Authorization:'Bearer ' + c.key },
-      body: JSON.stringify({
-        model: c.llm, temperature: 0.2, response_format: { type:'json_object' },
-        messages: [ { role:'system', content: system }, { role:'user', content: user } ]
-      })
-    });
-    nextCallAt = Date.now() + Math.min(60000, Math.ceil(tok / 12000 * 62000)); // ফ্রি TPM মেনে চলা
+      body: JSON.stringify({ model:c.llm, temperature:0.2, response_format:{type:'json_object'},
+        messages:[{role:'system',content:system},{role:'user',content:user}] }) });
+    nextCallAt = Date.now() + Math.min(60000, Math.ceil(tok / 12000 * 62000));
     if (r.status === 429){
       let sec = parseFloat(r.headers.get('retry-after') || '0');
       let body = ''; try { body = JSON.stringify(await r.json()); } catch(e){}
       if (!sec){ const m = body.match(/try again in ([\d.]+)\s*s/i); sec = m ? parseFloat(m[1]) : 20; }
-      await waitUntil(Date.now() + (sec + 2) * 1000, 'ফ্রি সীমা ছুঁয়েছে, অপেক্ষা —');
+      await waitUntil(Date.now() + (sec + 2) * 1000, T('waitHit'));
       continue;
     }
     if (!r.ok){
       let m = r.status + ''; try { const j = await r.json(); m = (j.error && j.error.message) || m; } catch(e){}
-      if (r.status === 401) m = 'API Key ভুল বা মেয়াদোত্তীর্ণ';
-      if (r.status === 413) m = 'এই অংশ খুব বড় — ট্রান্সক্রিপ্ট কিছুটা ছোট করুন';
+      if (r.status === 401) m = T('keyBad');
+      if (r.status === 413) m = T('tooBig');
       throw new Error(m);
     }
     const j = await r.json();
     const raw = j.choices[0].message.content;
     return JSON.parse(raw.slice(raw.indexOf('{'), raw.lastIndexOf('}') + 1));
   }
-  throw new Error('সার্ভিস বারবার ব্যস্ত — কিছুক্ষণ পর আবার চেষ্টা করুন');
+  throw new Error(T('busy'));
 }
-
-// ফ্রি প্ল্যানের টোকেন সীমা মেনে ট্রান্সক্রিপ্ট ভাগ করা
 function splitTranscript(limit){
   const parts = []; let cur = '';
   S.segs.forEach(s => {
@@ -1012,39 +1096,40 @@ function splitTranscript(limit){
   if (cur.trim()) parts.push(cur);
   return parts;
 }
-
 async function aiStructure(){
-  const c = cfg();
-  if (!c.key){ $('apiBox').open = true; return alert('আগে API Key দিন (সেকশন ৩-এর ⚙️ অংশে)।'); }
-  if (!S.segs.length) return alert('আগে রেকর্ড করুন বা অডিও আপলোড করুন।');
+  if (!cfg().key){ $('apiBox').open = true; return alert(T('needKey')); }
+  if (!S.segs.length) return alert(T('needAudio'));
   aborter = new AbortController();
   $('btnCancel').style.display = 'inline-block';
   nextCallAt = 0;
-  const head =
-    'সভার শিরোনাম: ' + ($('mTitle').value || '(নেই)') +
-    '\nআলোচ্যসূচি: ' + ($('mAgenda').value || '(নেই)') +
-    '\nউপস্থিত: ' + ($('mPresent').value || '(নেই)') + '\n\n';
+  const head = 'Meeting title: ' + ($('mTitle').value || '-') +
+               '\nAgenda: ' + ($('mAgenda').value || '-') +
+               '\nAttendees: ' + ($('mPresent').value || '-') + '\n\n';
   try {
     const parts = splitTranscript(11000);
     let data;
     if (parts.length === 1){
-      setProg(45, 'AI মিনিটস সাজাচ্ছে…');
-      data = await chatJSON(AI_FULL, head + '--- ট্রান্সক্রিপ্ট ---\n' + parts[0]);
+      setProg(45, T('aiWorking'));
+      data = await chatJSON(aiRules() + 'Produce the complete minutes:\n' + SCHEMA_FULL,
+                            head + '--- TRANSCRIPT ---\n' + parts[0]);
     } else {
       const notes = { discussion:[], decisions:[], actions:[] };
       for (let i = 0; i < parts.length; i++){
-        setProg(10 + 70*i/parts.length, 'AI পড়ছে — অংশ ' + bn(i+1) + '/' + bn(parts.length) + '…');
-        const d = await chatJSON(AI_MAP, head + '--- অংশ ' + (i+1) + '/' + parts.length + ' ---\n' + parts[i]);
+        setProg(10 + 70*i/parts.length, T('aiReading') + num(i+1) + '/' + num(parts.length) + '…');
+        const d = await chatJSON(aiRules() + 'This is one part of the transcript. Extract:\n' + SCHEMA_MAP,
+                                 head + '--- PART ' + (i+1) + '/' + parts.length + ' ---\n' + parts[i]);
         ['discussion','decisions','actions'].forEach(k => { if (Array.isArray(d[k])) notes[k].push(...d[k]); });
       }
-      setProg(85, 'সব অংশ মিলিয়ে চূড়ান্ত কার্যবিবরণী তৈরি হচ্ছে…');
-      data = await chatJSON(AI_REDUCE, head + '--- নোট ---\n' + JSON.stringify(notes).slice(0, 22000));
+      setProg(85, T('aiMerging'));
+      data = await chatJSON(aiRules() + 'Below are notes taken from different parts of the same meeting. ' +
+                            'Merge duplicates, order them logically and produce the complete minutes:\n' + SCHEMA_FULL,
+                            head + '--- NOTES ---\n' + JSON.stringify(notes).slice(0, 22000));
     }
     applyAI(data);
-    setProg(100, '<span class="ok">✓ সাজানো হয়েছে — নিচে দেখে নিন, দরকারে এডিট করুন।</span>');
+    setProg(100, '<span class="ok">' + T('aiDone') + '</span>');
     setTimeout(() => setProg(null), 6000);
   } catch(e){
-    setProg(100, '<span class="err">AI সমস্যা: ' + esc(e.message || String(e)) + '</span>');
+    setProg(100, '<span class="err">' + T('aiProblem') + esc(e.message || String(e)) + '</span>');
   } finally { $('btnCancel').style.display = 'none'; aborter = null; }
 }
 $('btnAI').onclick = aiStructure;
@@ -1052,13 +1137,12 @@ $('btnAI').onclick = aiStructure;
 function applyAI(d){
   if (d.title && !$('mTitle').value.trim()) $('mTitle').value = d.title;
   if (Array.isArray(d.agenda) && d.agenda.length && !$('mAgenda').value.trim())
-    $('mAgenda').value = d.agenda.map((a,i) => bn(i+1) + '. ' + a).join('\n');
+    $('mAgenda').value = d.agenda.map((a,i) => num(i+1) + '. ' + a).join('\n');
   if (Array.isArray(d.attendees) && d.attendees.length && !$('mPresent').value.trim())
-    $('mPresent').value = d.attendees.map((a,i) => bn(i+1) + '. ' + a).join('\n');
+    $('mPresent').value = d.attendees.map((a,i) => num(i+1) + '. ' + a).join('\n');
   if (d.summary) $('mSummary').value = d.summary;
   if (Array.isArray(d.discussion) && d.discussion.length)
-    $('mDiscussion').value = d.discussion.map(t =>
-      (t.topic || '') + '\n' + (t.points||[]).map(p => '- ' + p).join('\n')).join('\n\n');
+    $('mDiscussion').value = d.discussion.map(t => (t.topic||'') + '\n' + (t.points||[]).map(p => '- ' + p).join('\n')).join('\n\n');
   if (Array.isArray(d.decisions) && d.decisions.length) S.decisions = d.decisions.filter(Boolean);
   if (Array.isArray(d.actions) && d.actions.length)
     S.actions = d.actions.filter(a => a && a.task).map(a => ({ task:a.task, who:a.who||'', due:a.due||'' }));
@@ -1066,8 +1150,6 @@ function applyAI(d){
   renderDecisions(); renderActions(); autosave();
   $('sumCard').scrollIntoView({ behavior:'smooth', block:'start' });
 }
-
-// টেক্সট-এরিয়া থেকে বিষয়ভিত্তিক আলোচনা পার্স করা
 function parseDiscussion(){
   const out = [];
   ($('mDiscussion').value || '').split('\n').forEach(line => {
@@ -1081,7 +1163,43 @@ function parseDiscussion(){
 }
 
 /* ============================================================
-   অংশ ৪ — অটো-সেভ (ব্রাউজারে)
+   PART 8 — full self test
+   ============================================================ */
+$('btnSelfTest').onclick = async () => {
+  const out = $('testOut'); out.style.display = 'block'; out.innerHTML = '';
+  const line = (t, cls) => out.innerHTML += '<div>' + (cls ? '<span class="'+cls+'">'+t+'</span>' : t) + '</div>';
+  const c = cfg();
+  if (!c.key){ line(T('keyMissing'), 'err'); return; }
+  aborter = new AbortController();
+  line(T('tStart'));
+  try {
+    const r = await fetch(c.base + '/models', { headers:{ Authorization:'Bearer ' + c.key } });
+    if (!r.ok) throw new Error('HTTP ' + r.status + (r.status === 401 ? ' — ' + T('keyBad') : ''));
+    const ids = ((await r.json()).data || []).map(m => m.id);
+    line(T('t1') + ' (' + c.p + ', ' + num(ids.length) + T('t1models') + ')', 'ok');
+    const okStt = ids.includes(c.stt);
+    line((okStt ? T('t2ok') : T('t2bad')) + '“' + c.stt + '”', okStt ? 'ok' : 'err');
+    if (!ids.includes(c.llm)) line(T('t2llm') + '“' + c.llm + '”', 'err');
+  } catch(e){ line(T('t1fail') + esc(e.message), 'err'); return; }
+  try {
+    const sr = 16000, n = sr*2, pcm = new Float32Array(n);
+    for (let i=0;i<n;i++) pcm[i] = Math.sin(2*Math.PI*220*i/sr) * 0.25 * Math.sin(Math.PI*i/n);
+    const t0 = Date.now();
+    await transcribeChunk(encodeWav(pcm, sr), 0);
+    line(T('t3ok') + ' (' + num(Date.now()-t0) + T('t3ms') + ')', 'ok');
+  } catch(e){ line(T('t3fail') + esc(e.message), 'err'); }
+  try {
+    nextCallAt = 0;
+    const d = await chatJSON('Reply with JSON only.',
+      'Extract the decision from this sentence: "It was decided that the report must be submitted next Sunday." Format: {"decisions":[""]}');
+    line(T('t4ok') + '“' + esc(String((d.decisions && d.decisions[0]) || '-').slice(0,60)) + '”', 'ok');
+    line('<b class="ok">' + T('tAllOk') + '</b>');
+  } catch(e){ line(T('t4fail') + esc(e.message), 'err'); }
+  aborter = null;
+};
+
+/* ============================================================
+   PART 9 — autosave
    ============================================================ */
 const FIELDS = ['mTitle','mNo','mDate','mTime','mVenue','mChair','mSecretary','mPresent','mAbsent','mAgenda','mOrg','mSummary','mDiscussion'];
 let saveTimer;
@@ -1092,53 +1210,32 @@ function autosave(){
     FIELDS.forEach(k => data.f[k] = $(k).value);
     try {
       localStorage.setItem('mmr_draft', JSON.stringify(data));
-      $('autosave').textContent = '✓ সেভ হয়েছে ' + new Date().toLocaleTimeString('bn-BD');
-    } catch(e){ $('autosave').textContent = 'সেভ করা যায়নি'; }
+      $('autosave').dataset.stamp = '1';
+      $('autosave').textContent = T('savedAt') + new Date().toLocaleTimeString(LANG === 'bn' ? 'bn-BD' : 'en-GB');
+    } catch(e){ $('autosave').textContent = T('saveFail'); }
   }, 600);
 }
 FIELDS.forEach(k => $(k).addEventListener('input', autosave));
 
-(function restore(){
-  try {
-    const d = JSON.parse(localStorage.getItem('mmr_draft') || 'null');
-    if (!d || !((d.segs||[]).length || d.f.mTitle)) return;
-    if (!confirm('আগের অসম্পূর্ণ সভার খসড়া পাওয়া গেছে। ফিরিয়ে আনব?')) return;
-    FIELDS.forEach(k => { if (d.f[k] != null) $(k).value = d.f[k]; });
-    S.segs = d.segs||[]; S.decisions = d.decisions||[]; S.actions = d.actions||[]; S.elapsed = d.elapsed||0;
-    renderTranscript(); renderDecisions(); renderActions();
-    $('timer').textContent = hms(S.elapsed);
-    if ($('mSummary').value.trim() || $('mDiscussion').value.trim()) $('sumCard').style.display = 'block';
-  } catch(e){}
-})();
-
 /* ============================================================
-   অংশ ৫ — .docx তৈরি (কোনো লাইব্রেরি ছাড়া, বিশুদ্ধ JS)
+   PART 10 — .docx builder
    ============================================================ */
-const X = t => String(t==null?'':t)
-  .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+const X = t => String(t==null?'':t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
   .replace(/"/g,'&quot;').replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g,'');
-
 function runs(text, o){
   o = o||{};
-  const rPr = '<w:rPr>' +
-    '<w:rFonts w:ascii="Calibri" w:hAnsi="Calibri" w:cs="Nirmala UI"/>' +
-    (o.b?'<w:b/><w:bCs/>':'') + (o.i?'<w:i/>':'') +
-    (o.color?'<w:color w:val="'+o.color+'"/>':'') +
-    '<w:sz w:val="'+(o.sz||22)+'"/><w:szCs w:val="'+(o.sz||22)+'"/>' +
-    '</w:rPr>';
+  const rPr = '<w:rPr><w:rFonts w:ascii="Calibri" w:hAnsi="Calibri" w:cs="Nirmala UI"/>' +
+    (o.b?'<w:b/><w:bCs/>':'') + (o.i?'<w:i/>':'') + (o.color?'<w:color w:val="'+o.color+'"/>':'') +
+    '<w:sz w:val="'+(o.sz||22)+'"/><w:szCs w:val="'+(o.sz||22)+'"/></w:rPr>';
   return String(text==null?'':text).split('\n').map((line,i) =>
-    '<w:r>' + rPr + (i?'<w:br/>':'') + '<w:t xml:space="preserve">' + X(line) + '</w:t></w:r>'
-  ).join('');
+    '<w:r>' + rPr + (i?'<w:br/>':'') + '<w:t xml:space="preserve">' + X(line) + '</w:t></w:r>').join('');
 }
 function P(text, o){
   o = o||{};
-  const pPr = '<w:pPr>' +
-    (o.align?'<w:jc w:val="'+o.align+'"/>':'') +
+  const pPr = '<w:pPr>' + (o.align?'<w:jc w:val="'+o.align+'"/>':'') +
     '<w:spacing w:before="'+(o.before||0)+'" w:after="'+(o.after==null?120:o.after)+'" w:line="276" w:lineRule="auto"/>' +
     (o.ind?'<w:ind w:left="'+o.ind+'" w:hanging="'+(o.hang||0)+'"/>':'') +
-    (o.shade?'<w:shd w:val="clear" w:fill="'+o.shade+'"/>':'') +
-    (o.border?'<w:pBdr><w:bottom w:val="single" w:sz="8" w:space="2" w:color="0D6E5C"/></w:pBdr>':'') +
-    '</w:pPr>';
+    (o.border?'<w:pBdr><w:bottom w:val="single" w:sz="8" w:space="2" w:color="0D6E5C"/></w:pBdr>':'') + '</w:pPr>';
   return '<w:p>' + pPr + runs(text, o) + '</w:p>';
 }
 function H(text, lvl){
@@ -1147,153 +1244,125 @@ function H(text, lvl){
 function CELL(content, w, o){
   o = o||{};
   return '<w:tc><w:tcPr><w:tcW w:w="'+w+'" w:type="dxa"/>' +
-    (o.shade?'<w:shd w:val="clear" w:fill="'+o.shade+'"/>':'') +
-    '<w:vAlign w:val="center"/></w:tcPr>' +
-    (Array.isArray(content) ? content.join('') : P(content, {after:40, b:o.b, sz:o.sz||21})) +
-    '</w:tc>';
+    (o.shade?'<w:shd w:val="clear" w:fill="'+o.shade+'"/>':'') + '<w:vAlign w:val="center"/></w:tcPr>' +
+    (Array.isArray(content) ? content.join('') : P(content, {after:40, b:o.b, sz:o.sz||21})) + '</w:tc>';
 }
 function TABLE(rows, widths, o){
   o = o||{};
   const bd = '<w:tblBorders>' + ['top','left','bottom','right','insideH','insideV']
     .map(s => '<w:'+s+' w:val="single" w:sz="6" w:space="0" w:color="B6C7C2"/>').join('') + '</w:tblBorders>';
   const grid = '<w:tblGrid>' + widths.map(w => '<w:gridCol w:w="'+w+'"/>').join('') + '</w:tblGrid>';
-  const body = rows.map((r,ri) =>
-    '<w:tr>' + r.map((c,ci) => CELL(c, widths[ci], { shade: (o.header && ri===0) ? 'E8F3EF' : null, b: (o.header && ri===0) || (o.firstColBold && ci===0) })).join('') + '</w:tr>'
-  ).join('');
+  const body = rows.map((r,ri) => '<w:tr>' + r.map((c,ci) =>
+    CELL(c, widths[ci], { shade:(o.header && ri===0) ? 'E8F3EF' : null, b:(o.header && ri===0) || (o.firstColBold && ci===0) })).join('') + '</w:tr>').join('');
   return '<w:tbl><w:tblPr><w:tblW w:w="9360" w:type="dxa"/>' + bd +
     '<w:tblCellMar><w:top w:w="60" w:type="dxa"/><w:left w:w="100" w:type="dxa"/><w:bottom w:w="60" w:type="dxa"/><w:right w:w="100" w:type="dxa"/></w:tblCellMar>' +
     '</w:tblPr>' + grid + body + '</w:tbl>';
 }
-
+const MONTHS = {
+ bn:['জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর'],
+ en:['January','February','March','April','May','June','July','August','September','October','November','December']};
+function formatDate(iso){
+  if (!iso) return '';
+  const d = new Date(iso + 'T00:00:00');
+  return LANG === 'bn'
+    ? num(d.getDate()) + ' ' + MONTHS.bn[d.getMonth()] + ' ' + num(d.getFullYear()) + ' খ্রিঃ'
+    : d.getDate() + ' ' + MONTHS.en[d.getMonth()] + ' ' + d.getFullYear();
+}
 function buildBody(){
   const v = id => $(id).value.trim();
   const lines = id => v(id).split('\n').map(s=>s.trim()).filter(Boolean);
+  const numbered = (arr) => arr.map((n,i) => P((/^[০-৯0-9]/.test(n) ? '' : (num(i+1) + '. ')) + n, { ind:360, after:40 })).join('');
   let b = '';
-
   if (v('mOrg')) b += P(v('mOrg'), { b:true, sz:30, align:'center', color:'0D6E5C', after:40 });
-  b += P(v('mTitle') || 'সভার কার্যবিবরণী', { b:true, sz:32, align:'center', after:60 });
-  b += P('সভার কার্যবিবরণী (Minutes of Meeting)', { align:'center', sz:20, color:'555555', after:200 });
+  b += P(v('mTitle') || T('dMinutes'), { b:true, sz:32, align:'center', after:60 });
+  b += P(T('dMinutesSub'), { align:'center', sz:20, color:'555555', after:200 });
 
   const meta = [];
-  if (v('mNo'))   meta.push(['সভা নং', v('mNo')]);
-  meta.push(['তারিখ', formatDate(v('mDate'))]);
-  if (v('mTime')) meta.push(['সময়', v('mTime')]);
-  if (v('mVenue'))meta.push(['স্থান', v('mVenue')]);
-  if (v('mChair'))meta.push(['সভাপতি', v('mChair')]);
-  if (S.elapsed)  meta.push(['সভার স্থিতিকাল', hms(S.elapsed)]);
+  if (v('mNo'))    meta.push([T('dNo'), v('mNo')]);
+  meta.push([T('dDate'), formatDate(v('mDate'))]);
+  if (v('mTime'))  meta.push([T('dTime'), v('mTime')]);
+  if (v('mVenue')) meta.push([T('dVenue'), v('mVenue')]);
+  if (v('mChair')) meta.push([T('dChair'), v('mChair')]);
+  if (S.elapsed)   meta.push([T('dDuration'), hms(S.elapsed)]);
   b += TABLE(meta, [2600, 6760], { firstColBold:true });
 
-  const pres = lines('mPresent');
-  if (pres.length){
-    b += H('উপস্থিত সদস্যবৃন্দ', 2);
-    pres.forEach((n,i) => b += P((/^[০-৯0-9]/.test(n)?'':(bn(i+1)+'. ')) + n, { ind:360, after:40 }));
-  }
-  const abs = lines('mAbsent');
-  if (abs.length){
-    b += H('অনুপস্থিত', 2);
-    abs.forEach((n,i) => b += P((/^[০-৯0-9]/.test(n)?'':(bn(i+1)+'. ')) + n, { ind:360, after:40 }));
-  }
-  const ag = lines('mAgenda');
-  if (ag.length){
-    b += H('আলোচ্যসূচি', 2);
-    ag.forEach((n,i) => b += P((/^[০-৯0-9]/.test(n)?'':(bn(i+1)+'. ')) + n, { ind:360, after:40 }));
-  }
+  if (lines('mPresent').length){ b += H(T('dPresent'), 2); b += numbered(lines('mPresent')); }
+  if (lines('mAbsent').length){  b += H(T('dAbsent'), 2);  b += numbered(lines('mAbsent')); }
+  if (lines('mAgenda').length){  b += H(T('dAgenda'), 2);  b += numbered(lines('mAgenda')); }
 
-  if (v('mSummary')){
-    b += H('সারসংক্ষেপ', 1);
-    b += P(v('mSummary'), { align:'both', after:120 });
-  }
+  if (v('mSummary')){ b += H(T('dSummary'), 1); b += P(v('mSummary'), { align:'both', after:120 }); }
 
   const disc = parseDiscussion();
   if (disc.length){
-    b += H('বিস্তারিত আলোচনা', 1);
+    b += H(T('dDiscussion'), 1);
     let n = 0;
     disc.forEach(t => {
-      if (t.topic) b += P(bn(++n) + '. ' + t.topic, { b:true, sz:23, before:120, after:60 });
+      if (t.topic) b += P(num(++n) + '. ' + t.topic, { b:true, sz:23, before:120, after:60 });
       t.points.forEach(p => b += P('•  ' + p, { ind:560, hang:220, after:60 }));
     });
   }
-
   const dec = S.decisions.filter(d => d.trim());
   if (dec.length){
-    b += H('গৃহীত সিদ্ধান্তসমূহ', 1);
-    dec.forEach((d,i) => b += P(bn(i+1) + '. ' + d, { ind:360, hang:360, after:100 }));
+    b += H(T('dDecisions'), 1);
+    dec.forEach((d,i) => b += P(num(i+1) + '. ' + d, { ind:360, hang:360, after:100 }));
   }
-
   const acts = S.actions.filter(a => a.task.trim());
   if (acts.length){
-    b += H('করণীয় ও দায়িত্ব বণ্টন', 1);
-    const rows = [['ক্রম','করণীয়','দায়িত্বপ্রাপ্ত','সময়সীমা']];
-    acts.forEach((a,i) => rows.push([bn(i+1), a.task, a.who || '—', a.due || '—']));
+    b += H(T('dActions'), 1);
+    const rows = [[T('dSl'), T('dTask'), T('dWho'), T('dDue')]];
+    acts.forEach((a,i) => rows.push([num(i+1), a.task, a.who || '—', a.due || '—']));
     b += TABLE(rows, [700, 4660, 2200, 1800], { header:true });
   }
-
   if ($('incTranscript').checked && S.segs.length){
-    b += H('সংযুক্তি: আলোচনার সম্পূর্ণ বিবরণ', 1);
+    b += H(T('dTranscript'), 1);
     S.segs.forEach(s => {
       const pre = ($('incTime').checked ? '[' + hms(s.t) + '] ' : '') + (s.sp ? s.sp + ': ' : '');
       b += P(pre + s.text, { after:80 });
     });
   }
-
   if ($('incSign').checked){
     b += P('', { after:400 });
     b += TABLE([[
       [P('', {after:0}), P('_____________________', {align:'center', after:40}),
-       P(v('mSecretary') || 'মিনিটস প্রস্তুতকারী', {align:'center', b:true, sz:21, after:0}),
-       P('প্রস্তুতকারী', {align:'center', sz:19, color:'555555', after:0})],
+       P(v('mSecretary') || T('dPrepName'), {align:'center', b:true, sz:21, after:0}),
+       P(T('dPreparedBy'), {align:'center', sz:19, color:'555555', after:0})],
       [P('', {after:0}), P('_____________________', {align:'center', after:40}),
-       P(v('mChair') || 'সভাপতি', {align:'center', b:true, sz:21, after:0}),
-       P('সভাপতি', {align:'center', sz:19, color:'555555', after:0})]
+       P(v('mChair') || T('dChairSign'), {align:'center', b:true, sz:21, after:0}),
+       P(T('dChairSign'), {align:'center', sz:19, color:'555555', after:0})]
     ]], [4680, 4680], {});
   }
   b += P('', {after:0});
   return b;
 }
-
-function formatDate(iso){
-  if (!iso) return '';
-  const M = ['জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর'];
-  const d = new Date(iso + 'T00:00:00');
-  return bn(d.getDate()) + ' ' + M[d.getMonth()] + ' ' + bn(d.getFullYear()) + ' খ্রিঃ';
-}
-
 function documentXml(){
   return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n' +
-  '<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">' +
-  '<w:body>' + buildBody() +
+  '<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>' + buildBody() +
   '<w:sectPr><w:pgSz w:w="11906" w:h="16838"/>' +
   '<w:pgMar w:top="1134" w:right="1134" w:bottom="1134" w:left="1418" w:header="709" w:footer="709" w:gutter="0"/>' +
   '</w:sectPr></w:body></w:document>';
 }
 const STYLES_XML = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n' +
 '<w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">' +
-'<w:docDefaults><w:rPrDefault><w:rPr>' +
-'<w:rFonts w:ascii="Calibri" w:hAnsi="Calibri" w:eastAsia="Calibri" w:cs="Nirmala UI"/>' +
-'<w:sz w:val="22"/><w:szCs w:val="22"/><w:lang w:val="en-US" w:bidi="bn-BD"/>' +
-'</w:rPr></w:rPrDefault><w:pPrDefault><w:pPr><w:spacing w:after="120" w:line="276" w:lineRule="auto"/></w:pPr></w:pPrDefault></w:docDefaults>' +
-'<w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/><w:qFormat/></w:style>' +
-'</w:styles>';
+'<w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Calibri" w:hAnsi="Calibri" w:eastAsia="Calibri" w:cs="Nirmala UI"/>' +
+'<w:sz w:val="22"/><w:szCs w:val="22"/><w:lang w:val="en-US" w:bidi="bn-BD"/></w:rPr></w:rPrDefault>' +
+'<w:pPrDefault><w:pPr><w:spacing w:after="120" w:line="276" w:lineRule="auto"/></w:pPr></w:pPrDefault></w:docDefaults>' +
+'<w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/><w:qFormat/></w:style></w:styles>';
 const CONTENT_TYPES = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n' +
 '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">' +
 '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>' +
 '<Default Extension="xml" ContentType="application/xml"/>' +
 '<Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>' +
-'<Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/>' +
-'</Types>';
+'<Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/></Types>';
 const RELS = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n' +
 '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' +
-'<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/>' +
-'</Relationships>';
+'<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>';
 const DOC_RELS = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n' +
 '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' +
-'<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>' +
-'</Relationships>';
+'<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>';
 
-/* ---- ছোট ZIP লেখক (store, কোনো compression ছাড়া) ---- */
 const CRC_TABLE = (() => {
   const t = new Uint32Array(256);
-  for (let n=0; n<256; n++){ let c=n; for (let k=0;k<8;k++) c = c&1 ? 0xEDB88320 ^ (c>>>1) : c>>>1; t[n]=c>>>0; }
+  for (let n=0;n<256;n++){ let c=n; for (let k=0;k<8;k++) c = c&1 ? 0xEDB88320 ^ (c>>>1) : c>>>1; t[n]=c>>>0; }
   return t;
 })();
 function crc32(buf){
@@ -1301,15 +1370,12 @@ function crc32(buf){
   for (let i=0;i<buf.length;i++) c = CRC_TABLE[(c ^ buf[i]) & 0xFF] ^ (c>>>8);
   return (c ^ 0xFFFFFFFF) >>> 0;
 }
-function zip(files){ // files: [{name, str}]
-  const enc = new TextEncoder();
-  const parts = [], central = [];
-  let offset = 0;
-  const u16 = n => [n&255, (n>>8)&255];
-  const u32 = n => [n&255, (n>>8)&255, (n>>16)&255, (n>>>24)&255];
+function zip(files){
+  const enc = new TextEncoder(); const parts = [], central = []; let offset = 0;
+  const u16 = n => [n&255,(n>>8)&255];
+  const u32 = n => [n&255,(n>>8)&255,(n>>16)&255,(n>>>24)&255];
   files.forEach(f => {
-    const nameB = enc.encode(f.name), data = enc.encode(f.str);
-    const crc = crc32(data);
+    const nameB = enc.encode(f.name), data = enc.encode(f.str), crc = crc32(data);
     const local = [].concat([0x50,0x4b,0x03,0x04], u16(20), u16(0x0800), u16(0), u16(0), u16(0),
       u32(crc), u32(data.length), u32(data.length), u16(nameB.length), u16(0));
     parts.push(new Uint8Array(local), nameB, data);
@@ -1324,7 +1390,6 @@ function zip(files){ // files: [{name, str}]
   parts.push(new Uint8Array(cd), new Uint8Array(eocd));
   return new Blob(parts, { type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
 }
-
 function makeDocxBlob(){
   return zip([
     { name:'[Content_Types].xml', str: CONTENT_TYPES },
@@ -1336,7 +1401,7 @@ function makeDocxBlob(){
 }
 
 /* ============================================================
-   অংশ ৬ — ডাউনলোড
+   PART 11 — downloads
    ============================================================ */
 function save(blob, name){
   const a = document.createElement('a');
@@ -1345,12 +1410,12 @@ function save(blob, name){
   setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
 }
 function fileBase(){
-  const t = ($('mTitle').value.trim() || 'Meeting-Minutes').replace(/[\\/:*?"<>|]/g,'-');
+  const t = ($('mTitle').value.trim() || T('dFileBase')).replace(/[\\/:*?"<>|]/g,'-');
   return t + ' — ' + ($('mDate').value || '');
 }
 $('btnDocx').onclick = () => {
   if (!S.segs.length && !$('mTitle').value.trim() && !S.decisions.length){
-    if (!confirm('এখনো কোনো তথ্য নেই। তবুও খালি ফাইল তৈরি করব?')) return;
+    if (!confirm(T('emptyDoc'))) return;
   }
   save(makeDocxBlob(), fileBase() + '.docx');
 };
@@ -1359,24 +1424,58 @@ $('btnTxt').onclick = () => {
   save(new Blob([txt], {type:'text/plain;charset=utf-8'}), fileBase() + '.txt');
 };
 $('btnAudio').onclick = () => {
-  if (!chunks.length) return alert('কোনো অডিও পাওয়া যায়নি।');
+  if (!chunks.length) return alert(T('noAudioFile'));
   save(new Blob(chunks, {type:'audio/webm'}), fileBase() + '.webm');
 };
 $('btnCopy').onclick = async () => {
-  const txt =
-    'সভা: ' + $('mTitle').value + '\nতারিখ: ' + $('mDate').value + '\nউপস্থিত: ' + $('mPresent').value +
-    '\nআলোচ্যসূচি:\n' + $('mAgenda').value + '\n\nআলোচনার ট্রান্সক্রিপ্ট:\n' +
-    S.segs.map(s => (s.sp ? s.sp + ': ' : '') + s.text).join('\n') +
-    '\n\n[অনুরোধ: উপরের ট্রান্সক্রিপ্ট থেকে পেশাদার মিটিং মিনিটস তৈরি করুন — আলোচ্যসূচি অনুযায়ী সাজিয়ে, সিদ্ধান্ত ও করণীয় আলাদা করে দিন।]';
-  try { await navigator.clipboard.writeText(txt); alert('কপি হয়েছে ✓ এখন Claude/ChatGPT-এ পেস্ট করে সাজিয়ে নিন।'); }
-  catch(e){ prompt('নিচের লেখা কপি করুন:', txt); }
+  const txt = T('dMinutes') + ': ' + $('mTitle').value + '\n' + T('dDate') + ': ' + $('mDate').value +
+    '\n' + T('dPresent') + ': ' + $('mPresent').value + '\n' + T('dAgenda') + ':\n' + $('mAgenda').value +
+    '\n\n--- TRANSCRIPT ---\n' + S.segs.map(s => (s.sp ? s.sp + ': ' : '') + s.text).join('\n') +
+    '\n\n[Please turn the transcript above into professional meeting minutes, organised by agenda, with decisions and action items listed separately.]';
+  try { await navigator.clipboard.writeText(txt); alert(T('copied')); }
+  catch(e){ prompt(T('copyPrompt'), txt); }
 };
+window.addEventListener('beforeunload', e => { if (S.recording || M.running){ e.preventDefault(); e.returnValue = ''; } });
 
-window.addEventListener('beforeunload', e => {
-  if (S.recording){ e.preventDefault(); e.returnValue = ''; }
-});
+/* ============================================================
+   PART 12 — startup
+   ============================================================ */
+(function boot(){
+  try { LANG = localStorage.getItem('mmr_lang') === 'en' ? 'en' : 'bn'; } catch(e){}
+  let theme = null;
+  try { theme = localStorage.getItem('mmr_theme'); } catch(e){}
+  if (!theme) theme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+  setTheme(theme);
 
-renderDecisions(); renderActions(); countWords();
+  fillModels();
+  try {
+    const c = JSON.parse(localStorage.getItem('mmr_cfg') || 'null');
+    if (c){
+      $('provider').value = c.provider || 'groq'; fillModels();
+      $('apiKey').value = c.key || $('apiKey').value;
+      if (c.stt) $('sttModel').value = c.stt;
+      if (c.llm) $('llmModel').value = c.llm;
+      $('upLang').value = c.lang || '';
+    }
+  } catch(e){}
+
+  applyLang();
+  saveCfg();
+  if (!$('apiKey').value) $('apiBox').open = true;
+  setState(false, false, T('stReady'));
+  renderDecisions(); renderActions(); countWords();
+
+  try {
+    const d = JSON.parse(localStorage.getItem('mmr_draft') || 'null');
+    if (d && ((d.segs||[]).length || (d.f && d.f.mTitle)) && confirm(T('restore'))){
+      FIELDS.forEach(k => { if (d.f[k] != null) $(k).value = d.f[k]; });
+      S.segs = d.segs||[]; S.decisions = d.decisions||[]; S.actions = d.actions||[]; S.elapsed = d.elapsed||0;
+      renderTranscript(); renderDecisions(); renderActions();
+      $('timer').textContent = hms(S.elapsed);
+      if ($('mSummary').value.trim() || $('mDiscussion').value.trim()) $('sumCard').style.display = 'block';
+    }
+  } catch(e){}
+})();
 </script>
 </body>
 </html>
