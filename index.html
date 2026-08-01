@@ -424,6 +424,11 @@ bn:{
  doneMark:'✓ সম্পন্ন — ', problem:'সমস্যা: ', aiProblem:'AI সমস্যা: ',
  cancelled:'বাতিল করা হয়েছে',
  keyBad:'API Key ভুল বা মেয়াদোত্তীর্ণ', rateLimit:'সার্ভিসের সীমা ছাড়িয়ে গেছে — কিছুক্ষণ পর আবার চেষ্টা করুন',
+ retrying:'সংযোগ কেটে গেছে — আবার চেষ্টা করছি (', retryTail:'/৩)…',
+ netGone:'ইন্টারনেট সংযোগ ধরে রাখা যাচ্ছে না। মোবাইল ডেটার বদলে Wi-Fi দিয়ে চেষ্টা করুন — এক ঘণ্টার অডিও পাঠাতে প্রায় ১১০ MB লাগে।',
+ offline:'ফোনটি এখন ইন্টারনেটে যুক্ত নেই। সংযোগ ফিরে এলে আবার চেষ্টা করুন।',
+ bigFile:'ফাইলটি অনেক বড় (৪৫ মিনিটের বেশি)। ফোনের মেমোরিতে এত বড় অডিও একসাথে ধরে না — ফাইলটি ভাগ করে নিন, অথবা কম্পিউটার থেকে করুন।',
+ sending:'পাঠানো হচ্ছে',
  tooBig:'এই অংশ খুব বড় — ট্রান্সক্রিপ্ট কিছুটা ছোট করুন', busy:'সার্ভিস বারবার ব্যস্ত — কিছুক্ষণ পর আবার চেষ্টা করুন',
  waitFree:'ফ্রি সীমার জন্য অপেক্ষা —', waitHit:'ফ্রি সীমা ছুঁয়েছে, অপেক্ষা —', secs:' সেকেন্ড…',
  aiWorking:'AI মিনিটস সাজাচ্ছে…', aiReading:'AI পড়ছে — অংশ ', aiMerging:'সব অংশ মিলিয়ে চূড়ান্ত কার্যবিবরণী তৈরি হচ্ছে…',
@@ -516,6 +521,11 @@ en:{
  doneMark:'✓ Done — ', problem:'Problem: ', aiProblem:'AI problem: ',
  cancelled:'Cancelled',
  keyBad:'API key is wrong or expired', rateLimit:'Service limit reached — try again shortly',
+ retrying:'Connection dropped — retrying (', retryTail:'/3)…',
+ netGone:'The internet connection keeps dropping. Try Wi-Fi instead of mobile data — one hour of audio is about 110 MB to upload.',
+ offline:'The phone is not connected to the internet right now. Try again once the connection is back.',
+ bigFile:'This file is very long (over 45 minutes). A phone cannot hold that much audio in memory at once — split the file, or use a computer.',
+ sending:'Sending',
  tooBig:'This part is too large — shorten the transcript a little', busy:'Service keeps being busy — try again shortly',
  waitFree:'Waiting for the free limit —', waitHit:'Free limit reached, waiting —', secs:' seconds…',
  aiWorking:'AI is writing the minutes…', aiReading:'AI is reading — part ', aiMerging:'Merging all parts into the final minutes…',
@@ -858,7 +868,12 @@ async function sttCall(wav, format){
   return fetch(c.base + '/audio/transcriptions', {
     method:'POST', headers:{ Authorization:'Bearer ' + c.key }, body: fd, signal: aborter.signal });
 }
-async function transcribeChunk(wav, offsetSec){
+const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+                 (window.matchMedia && window.matchMedia('(max-width:820px)').matches);
+const CHUNK_SEC = isMobile ? 300 : 600;          // ফোনে ছোট খণ্ড — কম ডেটা, কম মেমোরি
+const netErrorish = e => /fail|network|load|timeout|abort|connection/i.test((e && (e.name + ' ' + e.message)) || '');
+
+async function transcribeOnce(wav, offsetSec){
   let r = await sttCall(wav, 'verbose_json');
   if (!r.ok && (r.status === 400 || r.status === 422)) r = await sttCall(wav, 'json');
   if (!r.ok){
@@ -866,7 +881,7 @@ async function transcribeChunk(wav, offsetSec){
     try { const j = await r.json(); msg = (j.error && j.error.message) || msg; } catch(e){}
     if (r.status === 401) msg = T('keyBad');
     if (r.status === 429) msg = T('rateLimit');
-    throw new Error(msg);
+    const err = new Error(msg); err.http = r.status; throw err;
   }
   const j = await r.json();
   if (Array.isArray(j.segments) && j.segments.length)
@@ -875,6 +890,32 @@ async function transcribeChunk(wav, offsetSec){
   const txt = (j.text || '').trim();
   return txt ? [{ t: offsetSec*1000, sp:'', text: txt }] : [];
 }
+
+// নেটওয়ার্ক কেটে গেলে নিজে থেকেই আবার চেষ্টা করে (মোবাইল ডেটার জন্য জরুরি)
+async function transcribeChunk(wav, offsetSec){
+  const keepMsg = $('progTxt').innerHTML;
+  for (let att = 0; att <= 3; att++){
+    try { return await transcribeOnce(wav, offsetSec); }
+    catch(e){
+      if (aborter && aborter.signal.aborted) throw e;
+      const retriable = !e.http && netErrorish(e);      // HTTP ভুল হলে বারবার চেষ্টা করে লাভ নেই
+      if (!retriable || att === 3){
+        if (retriable) throw new Error(T('netGone'));
+        throw e;
+      }
+      if (navigator.onLine === false){
+        setProg(50, '<span class="err">' + T('offline') + '</span>');
+        while (navigator.onLine === false){
+          if (aborter && aborter.signal.aborted) throw new Error(T('cancelled'));
+          await sleep(1500);
+        }
+      }
+      setProg(50, '<span class="err">' + T('retrying') + num(att+1) + T('retryTail') + '</span>');
+      await sleep(3000 * (att + 1));
+      $('progTxt').innerHTML = keepMsg;
+    }
+  }
+}
 async function handleFile(file){
   if (!cfg().key){ $('apiBox').open = true; $('keyMsg').innerHTML = '<span class="err">'+T('needKey')+'</span>'; return; }
   aborter = new AbortController();
@@ -882,14 +923,18 @@ async function handleFile(file){
   try {
     setProg(3, T('reading'));
     let pcm;
-    try { pcm = await decodeToMono16k(file); } catch(e){ throw new Error(T('badFormat')); }
+    try { pcm = await decodeToMono16k(file); }
+    catch(e){ throw new Error(isMobile && file.size > 40*1024*1024 ? T('bigFile') : T('badFormat')); }
     const sr = 16000, dur = pcm.length / sr;
-    const pts = splitPoints(pcm, sr, 600);
+    if (isMobile && dur > 45*60) throw new Error(T('bigFile'));
+    const pts = splitPoints(pcm, sr, CHUNK_SEC);
     const total = pts.length - 1;
     for (let i = 0; i < total; i++){
       if (aborter.signal.aborted) throw new Error(T('cancelled'));
+      const mb = ((pts[i+1]-pts[i]) * 2 / 1048576).toFixed(1);
       setProg(5 + 92*i/total, T('converting') + num(i+1) + '/' + num(total) +
-        ' <span style="opacity:.7;font-weight:400">(' + T('totalDur') + hms(dur*1000) + ')</span>');
+        ' <span style="opacity:.7;font-weight:400">(' + T('totalDur') + hms(dur*1000) +
+        ' · ' + T('sending') + ' ' + num(mb) + ' MB)</span>');
       const segs = await transcribeChunk(encodeWav(pcm.subarray(pts[i], pts[i+1]), sr), pts[i]/sr);
       S.segs.push(...segs);
       renderTranscript(); autosave();
@@ -988,7 +1033,7 @@ async function drainQueue(finishing){
     setProg(40, T('meetPart') + num(M.parts) + T('meetPartTail') +
       (M.queue.length ? ' (' + T('meetLeft') + num(M.queue.length) + T('meetLeftTail') + ')' : ''));
     const pcm = await decodeToMono16k(blob);
-    const sr = 16000, pts = splitPoints(pcm, sr, 600);
+    const sr = 16000, pts = splitPoints(pcm, sr, CHUNK_SEC);
     for (let i = 0; i < pts.length - 1; i++){
       const segs = await transcribeChunk(encodeWav(pcm.subarray(pts[i], pts[i+1]), sr), M.offset + pts[i]/sr);
       S.segs.push(...segs); renderTranscript();
