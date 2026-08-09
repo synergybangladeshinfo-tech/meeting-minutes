@@ -153,6 +153,7 @@
     <div class="sub" data-t="appSub">ভয়েস রেকর্ড → স্বয়ংক্রিয় ট্রান্সক্রিপ্ট → সুন্দর Word (.docx) ফাইল</div>
   </div>
   <div class="tools">
+    <button class="tbtn" id="btnNew" title="New meeting">🆕</button>
     <button class="tbtn" id="btnLang" title="Language">🌐 English</button>
     <button class="tbtn" id="btnTheme" title="Theme">🌙</button>
     <span class="save" id="autosave"></span>
@@ -399,6 +400,11 @@ bn:{
  errService:'এই ব্রাউজারে ভয়েস সার্ভিসটি বন্ধ আছে। Google Chrome ব্যবহার করুন।',
  errOther:'ভয়েস-টু-টেক্সট সমস্যা: ',
  micLevel:'মাইকের শব্দ', micQuiet:'শব্দ পাওয়া যাচ্ছে না',
+ bNew:'🆕 নতুন সভা',
+ confirmNew:'এই সভার সব তথ্য মুছে নতুন সভা শুরু হবে।\n\nদরকার হলে আগে Word ফাইলটি ডাউনলোড করে নিন।\n\nনিশ্চিত?',
+ newDone:'নতুন সভা শুরু — সব ঘর খালি করা হয়েছে',
+ tooBigOther:'এই ফরম্যাটের (webm/ogg) বড় ফাইল ব্রাউজার একবারে পড়তে পারে না। ফাইলটি mp3 বা m4a-তে রূপান্তর করে আপলোড করুন — তাহলে যেকোনো আকারের ফাইল চলবে।',
+ fileIs:'ফাইল', estTime:'আনুমানিক সময় ',
  lRecMode:'রেকর্ডিং পদ্ধতি',
  optWhisper:'রেকর্ড করে লেখা — নির্ভুল, ফোনেও চলে',
  optLive:'সরাসরি লেখা — সাথে সাথেই দেখা যায় (শুধু কম্পিউটার)',
@@ -513,6 +519,11 @@ en:{
  errService:'The speech service is disabled in this browser. Please use Google Chrome.',
  errOther:'Speech-to-text problem: ',
  micLevel:'Microphone level', micQuiet:'No sound detected',
+ bNew:'🆕 New meeting',
+ confirmNew:'This clears everything and starts a fresh meeting.\n\nDownload the Word file first if you still need it.\n\nAre you sure?',
+ newDone:'New meeting started — all fields cleared',
+ tooBigOther:'The browser cannot read a large file in this format (webm/ogg) in one go. Convert it to mp3 or m4a and upload that — then any size works.',
+ fileIs:'File', estTime:'estimated time ',
  lRecMode:'Recording method',
  optWhisper:'Record then transcribe — accurate, works on phones',
  optLive:'Live text — appears as you speak (computer only)',
@@ -630,6 +641,25 @@ function applyLang(){
   try { localStorage.setItem('mmr_lang', LANG); } catch(e){}
 }
 $('btnLang').onclick = () => { LANG = LANG === 'bn' ? 'en' : 'bn'; applyLang(); };
+
+/* নতুন সভা — সব ঘর খালি করে শুরু */
+function resetAll(){
+  if (S.recording || M.running) return;
+  if (!confirm(T('confirmNew'))) return;
+  FIELDS.forEach(k => { if (k !== 'mOrg') $(k).value = ''; });
+  $('mDate').value = new Date().toISOString().slice(0,10);
+  S.segs = []; S.decisions = []; S.actions = []; S.elapsed = 0;
+  S.recording = false; S.paused = false;
+  M.offset = 0; M.parts = 0; M.queue = [];
+  $('timer').textContent = '00:00:00'; $('mTimer').textContent = '00:00:00';
+  $('sumCard').style.display = 'none';
+  renderTranscript(); renderDecisions(); renderActions();
+  try { localStorage.removeItem('mmr_draft'); } catch(e){}
+  $('autosave').dataset.stamp = ''; $('autosave').textContent = T('newDone');
+  setProg(null); hideRecErr(); setState(false, false, T('stReady'));
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+$('btnNew').onclick = resetAll;
 
 /* ---- theme ---- */
 function setTheme(t){
@@ -1273,12 +1303,22 @@ async function handleFile(file){
   aborter = new AbortController();
   $('btnCancel').style.display = 'inline-block';
   try {
-    setProg(2, T('scanning'));
+    const mbFile = (file.size/1048576).toFixed(file.size > 1073741824 ? 0 : 1);
+    setProg(2, T('scanning') + ' <span style="opacity:.7;font-weight:400">(' + T('fileIs') + ': ' +
+      esc(file.name).slice(0,40) + ' · ' + num(mbFile) + ' MB)</span>');
     let src;
     try { src = await openAudio(file); }
     catch(e){ src = { type:'other', totalSec:0, gen: async function*(f){ const p = await decodeToMono16k(f); yield { pcm:p, sec:p.length/16000 }; } }; }
-    if (src.type === 'other') setProg(3, T('fmtOther'));
-    if (src.totalSec > 7200) setProg(4, '<span class="err">' + T('hourLimit') + '</span>');
+    if (src.type === 'other'){
+      if (file.size > 200*1024*1024) throw new Error(T('tooBigOther'));
+      setProg(3, T('fmtOther'));
+    }
+    if (src.totalSec){
+      const estSec = Math.max(src.totalSec/20, src.totalSec > 7200 ? src.totalSec/2 : 0);
+      setProg(4, T('longFile') + hms(src.totalSec*1000) + T('longFileTail') + hms(estSec*1000) +
+        (src.totalSec > 7200 ? '<br><span class="err">' + T('hourLimit') + '</span>' : ''));
+      await sleep(2500);
+    }
 
     const sr = 16000;
     let carry = new Float32Array(0), base = 0, idx = 0, doneSec = 0;
