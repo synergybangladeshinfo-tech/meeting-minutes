@@ -189,6 +189,13 @@
   <div class="card">
     <h2><span class="n">2</span><span data-t="s2">ভয়েস রেকর্ডিং</span></h2>
     <div class="row" style="margin-bottom:12px">
+      <div style="max-width:290px">
+        <label data-t="lRecMode"></label>
+        <select id="recMode">
+          <option value="whisper" data-t="optWhisper"></option>
+          <option value="live" data-t="optLive"></option>
+        </select>
+      </div>
       <div style="max-width:230px">
         <label data-t="lSpokenLang"></label>
         <select id="lang">
@@ -210,7 +217,14 @@
       <button id="btnClear" class="ghost"></button>
       <div class="status"><span class="dot" id="dot"></span><span id="stateTxt"></span> · <span id="timer">00:00:00</span></div>
     </div>
+    <div class="hint" id="hintRec"></div>
     <div class="hint" data-t="hintLang"></div>
+    <div id="fileWarn" class="warnbox" data-th="fileWarn" style="display:none"></div>
+    <div id="recErr" class="warnbox" style="display:none"></div>
+    <div id="levelWrap" style="display:none; margin-top:12px">
+      <div class="hint" style="margin:0 0 4px"><span data-t="micLevel"></span> <span id="levelTxt" style="opacity:.7"></span></div>
+      <div class="prog" style="display:block; height:7px"><i id="levelBar" style="background:var(--brand2)"></i></div>
+    </div>
     <div id="transcript" contenteditable="true" spellcheck="false"><div id="interim"></div></div>
     <div class="hint" data-t="hintEdit"></div>
     <div id="noSupport" class="warnbox" data-th="noSupport" style="display:none"></div>
@@ -378,6 +392,19 @@ bn:{
  hintEdit:'✏️ উপরের লেখা সরাসরি এডিট করা যায় — ভুল শব্দ ঠিক করে নিন।',
  noSupport:'⚠️ এই ব্রাউজারে ভয়েস-টু-টেক্সট সাপোর্ট নেই। অনুগ্রহ করে <b>Google Chrome</b> বা <b>Microsoft Edge</b> দিয়ে ফাইলটি খুলুন এবং ইন্টারনেট সংযোগ রাখুন।',
  micDenied:'মাইক্রোফোন ব্যবহারের অনুমতি দিতে হবে। ব্রাউজারের ঠিকানা বারের বাম পাশের 🔒 আইকনে ক্লিক করে Microphone → Allow করুন।',
+ fileWarn:'⚠️ <b>এই ফাইলটি সরাসরি কম্পিউটার থেকে খোলা হয়েছে।</b> এভাবে খুললে Chrome লাইভ ভয়েস-টু-টেক্সট চালু করতে দেয় না — তাই নিচের রেকর্ড বাটনটি কাজ করবে না।<br>লাইভ রেকর্ডিংয়ের জন্য অ্যাপের ইন্টারনেট ঠিকানাটি ব্যবহার করুন:<br><b>synergybangladeshinfo-tech.github.io/meeting-minutes/</b><br>এই ফাইলে সেকশন ৩ (অডিও আপলোড) ও সেকশন ৪ (অনলাইন মিটিং) ঠিকঠাক কাজ করে।',
+ errNetwork:'ভয়েস সার্ভিসে পৌঁছানো যাচ্ছে না। ইন্টারনেট সংযোগ দেখুন — আর অ্যাপটি অবশ্যই লিংক (https) থেকে খুলুন, সরাসরি ফাইল থেকে নয়।',
+ errNoSpeech:'কোনো কথা শোনা যাচ্ছে না — মাইক্রোফোনের কাছে গিয়ে বলুন, অথবা ঠিক মাইকটি বেছে নেওয়া হয়েছে কিনা দেখুন।',
+ errCapture:'মাইক্রোফোন পাওয়া যাচ্ছে না। অন্য কোনো অ্যাপ (Zoom/Meet) মাইক দখল করে আছে কিনা দেখুন।',
+ errService:'এই ব্রাউজারে ভয়েস সার্ভিসটি বন্ধ আছে। Google Chrome ব্যবহার করুন।',
+ errOther:'ভয়েস-টু-টেক্সট সমস্যা: ',
+ micLevel:'মাইকের শব্দ', micQuiet:'শব্দ পাওয়া যাচ্ছে না',
+ lRecMode:'রেকর্ডিং পদ্ধতি',
+ optWhisper:'রেকর্ড করে লেখা — নির্ভুল, ফোনেও চলে',
+ optLive:'সরাসরি লেখা — সাথে সাথেই দেখা যায় (শুধু কম্পিউটার)',
+ hintWhisper:'📱 এই পদ্ধতিতে অ্যাপ নিজেই রেকর্ড করে এবং প্রতি ৫ মিনিট পরপর লেখা তৈরি করে। ফোনে এটাই ব্যবহার করুন — বাংলা-ইংরেজি মেশানো কথাতেও অনেক বেশি নির্ভুল।',
+ hintLive:'💻 কথা বলার সাথে সাথে লেখা আসে, তবে এটি শুধু কম্পিউটারের Chrome-এ কাজ করে এবং নির্ভুলতা কম।',
+ recWhisper:'রেকর্ড হচ্ছে — প্রতি ৫ মিনিটে লেখা যুক্ত হবে',
  confirmClear:'পুরো ট্রান্সক্রিপ্ট মুছে যাবে। নিশ্চিত?',
  s3:'মোবাইলে রেকর্ড করা অডিও আপলোড করুন', pillFree:'ফ্রি',
  setTitle:'⚙️ API সেটিংস (একবার সেট করলেই হবে)', keySet:'✓ সেট করা আছে', keyNone:'সেট করা নেই',
@@ -427,8 +454,12 @@ bn:{
  retrying:'সংযোগ কেটে গেছে — আবার চেষ্টা করছি (', retryTail:'/৩)…',
  netGone:'ইন্টারনেট সংযোগ ধরে রাখা যাচ্ছে না। মোবাইল ডেটার বদলে Wi-Fi দিয়ে চেষ্টা করুন — এক ঘণ্টার অডিও পাঠাতে প্রায় ১১০ MB লাগে।',
  offline:'ফোনটি এখন ইন্টারনেটে যুক্ত নেই। সংযোগ ফিরে এলে আবার চেষ্টা করুন।',
- bigFile:'ফাইলটি অনেক বড় (৪৫ মিনিটের বেশি)। ফোনের মেমোরিতে এত বড় অডিও একসাথে ধরে না — ফাইলটি ভাগ করে নিন, অথবা কম্পিউটার থেকে করুন।',
+ bigFile:'এই ফরম্যাটের বড় ফাইল ফোনের মেমোরিতে ধরে না। ফাইলটি mp3 বা m4a-তে রূপান্তর করুন, অথবা ভাগ করে নিন।',
  sending:'পাঠানো হচ্ছে',
+ scanning:'ফাইল পড়া হচ্ছে (টুকরো টুকরো করে)…',
+ longFile:'দৈর্ঘ্য ', longFileTail:' — আনুমানিক সময় ',
+ hourLimit:'⚠️ ২ ঘণ্টার বেশি অডিও: Groq-এর ফ্রি প্ল্যানে ঘণ্টায় ২ ঘণ্টার বেশি অডিও পাঠানো যায় না, তাই মাঝে মাঝে অ্যাপ অপেক্ষা করবে। ট্যাবটি খোলা রাখুন — নিজে থেকেই চলতে থাকবে।',
+ fmtOther:'এই ফরম্যাটটি টুকরো করে পড়া যায় না — পুরোটা একবারে পড়ার চেষ্টা করছি (লম্বা ফাইলে সমস্যা হতে পারে)।',
  tooBig:'এই অংশ খুব বড় — ট্রান্সক্রিপ্ট কিছুটা ছোট করুন', busy:'সার্ভিস বারবার ব্যস্ত — কিছুক্ষণ পর আবার চেষ্টা করুন',
  waitFree:'ফ্রি সীমার জন্য অপেক্ষা —', waitHit:'ফ্রি সীমা ছুঁয়েছে, অপেক্ষা —', secs:' সেকেন্ড…',
  aiWorking:'AI মিনিটস সাজাচ্ছে…', aiReading:'AI পড়ছে — অংশ ', aiMerging:'সব অংশ মিলিয়ে চূড়ান্ত কার্যবিবরণী তৈরি হচ্ছে…',
@@ -475,6 +506,19 @@ en:{
  hintEdit:'✏️ The text above is editable — fix any misheard words directly.',
  noSupport:'⚠️ This browser does not support speech-to-text. Please open the file in <b>Google Chrome</b> or <b>Microsoft Edge</b> with an internet connection.',
  micDenied:'Microphone permission is required. Click the 🔒 icon at the left of the address bar, then Microphone → Allow.',
+ fileWarn:'⚠️ <b>This file was opened directly from the computer.</b> Chrome does not allow live speech-to-text on files opened this way, so the record button below will not work.<br>For live recording use the app’s web address instead:<br><b>synergybangladeshinfo-tech.github.io/meeting-minutes/</b><br>Section 3 (upload) and section 4 (online meeting) work fine in this file.',
+ errNetwork:'Cannot reach the speech service. Check your internet connection — and make sure you opened the app from its link (https), not directly from a file.',
+ errNoSpeech:'No speech is being heard — speak closer to the microphone, or check that the right microphone is selected.',
+ errCapture:'The microphone is not available. Check whether another app (Zoom/Meet) is holding it.',
+ errService:'The speech service is disabled in this browser. Please use Google Chrome.',
+ errOther:'Speech-to-text problem: ',
+ micLevel:'Microphone level', micQuiet:'No sound detected',
+ lRecMode:'Recording method',
+ optWhisper:'Record then transcribe — accurate, works on phones',
+ optLive:'Live text — appears as you speak (computer only)',
+ hintWhisper:'📱 The app records and produces text every 5 minutes. Use this on a phone — it is far more accurate, including mixed Bangla/English.',
+ hintLive:'💻 Text appears as you speak, but this only works in Chrome on a computer and is less accurate.',
+ recWhisper:'Recording — text is added every 5 minutes',
  confirmClear:'This will erase the whole transcript. Are you sure?',
  s3:'Upload a recording made on your phone', pillFree:'Free',
  setTitle:'⚙️ API settings (one-time setup)', keySet:'✓ Configured', keyNone:'Not configured',
@@ -524,8 +568,12 @@ en:{
  retrying:'Connection dropped — retrying (', retryTail:'/3)…',
  netGone:'The internet connection keeps dropping. Try Wi-Fi instead of mobile data — one hour of audio is about 110 MB to upload.',
  offline:'The phone is not connected to the internet right now. Try again once the connection is back.',
- bigFile:'This file is very long (over 45 minutes). A phone cannot hold that much audio in memory at once — split the file, or use a computer.',
+ bigFile:'A large file in this format will not fit in the phone’s memory. Convert it to mp3 or m4a, or split it.',
  sending:'Sending',
+ scanning:'Reading the file (piece by piece)…',
+ longFile:'Length ', longFileTail:' — estimated time ',
+ hourLimit:'⚠️ More than 2 hours of audio: Groq’s free plan allows only 2 hours of audio per hour, so the app will pause from time to time. Keep the tab open — it continues on its own.',
+ fmtOther:'This format cannot be read in pieces — trying to read it all at once (long files may fail).',
  tooBig:'This part is too large — shorten the transcript a little', busy:'Service keeps being busy — try again shortly',
  waitFree:'Waiting for the free limit —', waitHit:'Free limit reached, waiting —', secs:' seconds…',
  aiWorking:'AI is writing the minutes…', aiReading:'AI is reading — part ', aiMerging:'Merging all parts into the final minutes…',
@@ -574,6 +622,10 @@ function applyLang(){
   if (!S.recording && !S.paused) $('stateTxt').textContent = T('stReady');
   if (!M.running) $('mState').textContent = $('btnMeet').disabled ? T('meetDesktopOnly') : T('stReady');
   if (!$('autosave').dataset.stamp) $('autosave').textContent = T('notSaved');
+  const liveMode = $('recMode').value === 'live';
+  $('hintRec').innerHTML = T(liveMode ? 'hintLive' : 'hintWhisper');
+  $('noSupport').style.display = (!SR && liveMode) ? 'block' : 'none';
+  $('fileWarn').style.display = (location.protocol === 'file:' && liveMode) ? 'block' : 'none';
   renderTranscript(); renderActions(); countWords();
   try { localStorage.setItem('mmr_lang', LANG); } catch(e){}
 }
@@ -614,12 +666,58 @@ function buildRec(){
     $('interim').textContent = interim;
   };
   r.onerror = ev => {
-    if (ev.error === 'not-allowed'){
-      setState(false,false,T('stMic')); wantRunning = false; alert(T('micDenied'));
+    const e = ev.error;
+    if (e === 'not-allowed' || e === 'service-not-allowed'){
+      setState(false,false,T('stMic')); wantRunning = false;
+      showRecErr(e === 'not-allowed' ? T('micDenied') : T('errService'));
+    } else if (e === 'network'){
+      wantRunning = false; setState(false,false,T('stDone'));
+      showRecErr(T('errNetwork'));
+    } else if (e === 'audio-capture'){
+      wantRunning = false; setState(false,false,T('stDone'));
+      showRecErr(T('errCapture'));
+    } else if (e === 'no-speech'){
+      showRecErr(T('errNoSpeech'));               // চলতে থাকবে, শুধু জানিয়ে রাখা
+    } else if (e !== 'aborted'){
+      showRecErr(T('errOther') + e);
     }
   };
   r.onend = () => { if (wantRunning) { try { r.start(); } catch(e){} } };
   return r;
+}
+function showRecErr(msg){
+  const b = $('recErr'); b.innerHTML = msg; b.style.display = 'block';
+}
+function hideRecErr(){ $('recErr').style.display = 'none'; }
+
+/* মাইক ঠিকমতো শুনছে কিনা চোখে দেখার জন্য */
+let levelCtx = null, levelRaf = null;
+function startLevel(stream){
+  try {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    levelCtx = new AC();
+    const an = levelCtx.createAnalyser(); an.fftSize = 1024;
+    levelCtx.createMediaStreamSource(stream).connect(an);
+    const buf = new Uint8Array(an.fftSize);
+    $('levelWrap').style.display = 'block';
+    let quiet = 0;
+    const draw = () => {
+      an.getByteTimeDomainData(buf);
+      let peak = 0;
+      for (let i=0;i<buf.length;i++) peak = Math.max(peak, Math.abs(buf[i]-128));
+      const pct = Math.min(100, peak/64*100);
+      $('levelBar').style.width = pct + '%';
+      quiet = pct < 3 ? quiet + 1 : 0;
+      $('levelTxt').textContent = quiet > 150 ? '— ' + T('micQuiet') : '';
+      levelRaf = requestAnimationFrame(draw);
+    };
+    draw();
+  } catch(e){}
+}
+function stopLevel(){
+  if (levelRaf) cancelAnimationFrame(levelRaf);
+  if (levelCtx){ try { levelCtx.close(); } catch(e){} levelCtx = null; }
+  $('levelWrap').style.display = 'none';
 }
 function pushSeg(text){
   const sp = $('speaker').value.trim();
@@ -655,7 +753,37 @@ function hms(ms){
 }
 const esc = t => String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 
+/* ---- ফোনের জন্য: অ্যাপ রেকর্ড করে, Whisper লেখা বানায় ---- */
+async function startMicWhisper(){
+  if (!cfg().key){ $('apiBox').open = true; return alert(T('needKey')); }
+  let mic;
+  try { mic = await navigator.mediaDevices.getUserMedia({ audio:{ echoCancellation:true, noiseSuppression:true } }); }
+  catch(e){ return showRecErr(T('micDenied')); }
+  hideRecErr(); startLevel(mic);
+  const AC = window.AudioContext || window.webkitAudioContext;
+  M.ac = new AC(); M.dest = M.ac.createMediaStreamDestination();
+  M.ac.createMediaStreamSource(mic).connect(M.dest);
+  M.display = null; M.mic = mic; M.viaMic = true; M.running = true;
+  M.started = Date.now(); M.offset = 0; M.parts = 0;
+  S.recording = true; S.paused = false; S.startedAt = Date.now(); S.elapsed = 0;
+  setState(true, false, T('recWhisper')); tick();
+  startSegment();
+}
+function stopMicWhisper(){
+  stopLevel();
+  S.recording = false;
+  stopMeet();
+  setState(false, false, T('stDone'));
+}
+
+$('recMode').onchange = () => {
+  try { localStorage.setItem('mmr_recmode', $('recMode').value); } catch(e){}
+  hideRecErr(); applyLang();
+};
+
 $('btnStart').onclick = async () => {
+  hideRecErr();
+  if ($('recMode').value === 'whisper' && !S.paused) return startMicWhisper();
   if (S.paused){
     S.startedAt = Date.now(); S.paused = false; wantRunning = true;
     try { rec.start(); } catch(e){}
@@ -669,6 +797,7 @@ $('btnStart').onclick = async () => {
     mediaRec.ondataavailable = e => { if (e.data.size) chunks.push(e.data); };
     mediaRec.start();
     $('btnAudio').disabled = false;
+    startLevel(stream);
   } catch(e){}
   rec = buildRec(); wantRunning = true;
   try { rec.start(); } catch(e){}
@@ -682,11 +811,13 @@ $('btnPause').onclick = () => {
   setState(true,true,T('stPaused'));
 };
 $('btnStop').onclick = () => {
+  if (M.viaMic) return stopMicWhisper();
   if (!S.paused) S.elapsed += Date.now() - S.startedAt;
   S.recording = false; S.paused = false; wantRunning = false;
   try { rec.stop(); } catch(e){}
   if (mediaRec && mediaRec.state !== 'inactive') mediaRec.stop();
   if (stream) stream.getTracks().forEach(t => t.stop());
+  stopLevel();
   setState(false,false,T('stDone'));
   autoExtract();
 };
@@ -701,7 +832,7 @@ function setState(on, paused, txt){
   $('stateTxt').textContent = txt;
   $('btnStart').disabled = on && !paused;
   $('btnStart').textContent = paused ? T('bResume') : T('bStart');
-  $('btnPause').disabled = !on || paused;
+  $('btnPause').disabled = !on || paused || M.viaMic;   // রেকর্ড-মোডে বিরতি নেই
   $('btnStop').disabled = !on;
 }
 function tick(){
@@ -868,6 +999,227 @@ async function sttCall(wav, format){
   return fetch(c.base + '/audio/transcriptions', {
     method:'POST', headers:{ Authorization:'Bearer ' + c.key }, body: fd, signal: aborter.signal });
 }
+/* ---- বড় ফাইল টুকরো টুকরো করে পড়া (WAV / MP3 / M4A — যেকোনো দৈর্ঘ্য) ---- */
+const rdb = async (f,a,b) => new Uint8Array(await f.slice(a, Math.min(b, f.size)).arrayBuffer());
+const be32 = (u,i) => (u[i]<<24|u[i+1]<<16|u[i+2]<<8|u[i+3])>>>0;
+const str4 = (u,i) => String.fromCharCode(u[i],u[i+1],u[i+2],u[i+3]);
+function cat(list){
+  let n = 0; list.forEach(a => n += a.length);
+  const out = new Uint8Array(n); let o = 0;
+  list.forEach(a => { out.set(a,o); o += a.length; });
+  return out;
+}
+async function detectType(file){
+  const h = await rdb(file,0,16);
+  if (str4(h,0)==='RIFF' && str4(h,8)==='WAVE') return 'wav';
+  if (str4(h,4)==='ftyp') return 'mp4';
+  if (str4(h,0).slice(0,3)==='ID3') return 'mp3';
+  if (h[0]===0xFF && (h[1]&0xE0)===0xE0) return 'mp3';
+  return 'other';
+}
+async function* wavSlices(file, sliceSec){
+  const head = await rdb(file,0,Math.min(file.size, 65536));
+  const dv = new DataView(head.buffer, head.byteOffset, head.length);
+  let p = 12, fmt = null, dataOff = 0, dataLen = 0;
+  while (p + 8 <= head.length){
+    const id = str4(head,p), sz = dv.getUint32(p+4, true);
+    if (id === 'fmt ') fmt = { ch:dv.getUint16(p+10,true), sr:dv.getUint32(p+12,true), bits:dv.getUint16(p+22,true) };
+    if (id === 'data'){ dataOff = p+8; dataLen = sz || (file.size - dataOff); break; }
+    p += 8 + sz + (sz & 1);
+  }
+  if (!fmt || !dataOff) throw new Error('WAV_PARSE');
+  const block = fmt.ch * (fmt.bits/8);
+  const total = Math.min(dataLen, file.size - dataOff);
+  const per = Math.floor(fmt.sr * sliceSec) * block;
+  for (let off = 0; off < total; off += per){
+    const len = Math.min(per, total - off);
+    const body = await rdb(file, dataOff+off, dataOff+off+len);
+    const wav = new Uint8Array(44 + body.length);
+    const v = new DataView(wav.buffer);
+    const w = (o,s) => { for (let i=0;i<s.length;i++) v.setUint8(o+i, s.charCodeAt(i)); };
+    w(0,'RIFF'); v.setUint32(4, 36+body.length, true); w(8,'WAVEfmt ');
+    v.setUint32(16,16,true); v.setUint16(20,1,true); v.setUint16(22,fmt.ch,true);
+    v.setUint32(24,fmt.sr,true); v.setUint32(28,fmt.sr*block,true);
+    v.setUint16(32,block,true); v.setUint16(34,fmt.bits,true);
+    w(36,'data'); v.setUint32(40, body.length, true); wav.set(body,44);
+    yield { bytes: wav, sec: len/block/fmt.sr };
+  }
+}
+const MP3_BR = { 1:[0,32,40,48,56,64,80,96,112,128,160,192,224,256,320,0],
+                 2:[0,8,16,24,32,40,48,56,64,80,96,112,128,144,160,0] };
+const MP3_SR = [44100,48000,32000];
+async function* mp3Slices(file, sliceSec){
+  let pos = 0;
+  const h = await rdb(file,0,10);
+  if (str4(h,0).slice(0,3)==='ID3'){
+    pos = 10 + ((h[6]&0x7f)<<21 | (h[7]&0x7f)<<14 | (h[8]&0x7f)<<7 | (h[9]&0x7f));
+    if (h[5] & 0x10) pos += 10;
+  }
+  const WIN = 1<<22;
+  let win = new Uint8Array(0), winStart = pos, acc = [], accSec = 0;
+  const need = async (at,n) => {
+    if (at < winStart || at + n > winStart + win.length){
+      winStart = at; win = await rdb(file, at, at + WIN);
+    }
+    return at - winStart;
+  };
+  while (pos + 4 <= file.size){
+    let i = await need(pos,4);
+    if (win.length - i < 4) break;
+    if (!(win[i]===0xFF && (win[i+1]&0xE0)===0xE0)){ pos++; continue; }
+    const ver = (win[i+1]>>3)&3, layer = (win[i+1]>>1)&3;
+    if (ver===1 || layer!==1){ pos++; continue; }
+    const brIdx = (win[i+2]>>4)&15, srIdx = (win[i+2]>>2)&3, pad = (win[i+2]>>1)&1;
+    if (brIdx===0 || brIdx===15 || srIdx===3){ pos++; continue; }
+    const mpeg1 = ver===3, br = MP3_BR[mpeg1?1:2][brIdx]*1000;
+    let sr = MP3_SR[srIdx]; if (ver===2) sr/=2; else if (ver===0) sr/=4;
+    const flen = (mpeg1 ? Math.floor(144*br/sr) : Math.floor(72*br/sr)) + pad;
+    if (flen < 24){ pos++; continue; }
+    i = await need(pos, flen);
+    if (win.length - i < flen) break;
+    acc.push(win.slice(i,i+flen)); accSec += (mpeg1?1152:576)/sr; pos += flen;
+    if (accSec >= sliceSec){ yield { bytes:cat(acc), sec:accSec }; acc = []; accSec = 0; }
+  }
+  if (acc.length) yield { bytes:cat(acc), sec:accSec };
+}
+async function mp4Index(file){
+  let p = 0, moov = null;
+  while (p + 8 <= file.size){
+    const h = await rdb(file, p, p+16);
+    let size = be32(h,0); const type = str4(h,4); let hdr = 8;
+    if (size === 1){ size = be32(h,8)*4294967296 + be32(h,12); hdr = 16; }
+    if (size === 0) size = file.size - p;
+    if (type === 'moov'){ moov = await rdb(file, p+hdr, p+size); break; }
+    p += size;
+  }
+  if (!moov) throw new Error('MP4_NO_MOOV');
+  const boxes = (buf,want) => {
+    const out = []; let q = 0;
+    while (q + 8 <= buf.length){
+      let sz = be32(buf,q); const ty = str4(buf,q+4); let hd = 8;
+      if (sz === 1){ sz = be32(buf,q+8)*4294967296 + be32(buf,q+12); hd = 16; }
+      if (sz < 8 || q + sz > buf.length) break;
+      if (ty === want) out.push(buf.subarray(q+hd, q+sz));
+      q += sz;
+    }
+    return out;
+  };
+  const dig = (buf,path) => { let cur=[buf]; for (const t of path){ const n=[]; cur.forEach(b=>n.push(...boxes(b,t))); cur=n; if(!cur.length) return null; } return cur; };
+  for (const trak of boxes(moov,'trak')){
+    const stbl = dig(trak,['mdia','minf','stbl']), mdhd = dig(trak,['mdia','mdhd']);
+    if (!stbl || !mdhd) continue;
+    const stsd = boxes(stbl[0],'stsd')[0]; if (!stsd) continue;
+    const entry = stsd.subarray(8);
+    if (str4(entry,4) !== 'mp4a') continue;
+    const timescale = be32(mdhd[0], mdhd[0][0]===1 ? 20 : 12);
+    const mp4a = entry.subarray(8);
+    let asc = null;
+    for (let q = 28; q + 8 < mp4a.length; q++){
+      if (str4(mp4a,q)==='esds'){
+        const es = mp4a.subarray(q+8);
+        for (let r = 0; r + 2 < es.length; r++){
+          if (es[r] === 0x05){
+            let len = 0, rr = r+1, b;
+            do { b = es[rr++]; len = (len<<7) | (b & 0x7f); } while (b & 0x80);
+            asc = es.subarray(rr, rr+len); break;
+          }
+        }
+        break;
+      }
+    }
+    if (!asc) continue;
+    const aot = asc[0] >> 3, srIdx = ((asc[0]&7)<<1) | (asc[1]>>7), chCfg = (asc[1]>>3)&15;
+    const b = t => boxes(stbl[0],t)[0];
+    const stsz = b('stsz'), stco = b('stco'), co64 = b('co64'), stsc = b('stsc'), stts = b('stts');
+    if (!stsz || !stsc || !stts || (!stco && !co64)) continue;
+    const n = be32(stsz,8), uniform = be32(stsz,4);
+    const sizes = new Uint32Array(n);
+    for (let k=0;k<n;k++) sizes[k] = uniform || be32(stsz, 12+k*4);
+    const cN = be32(stco||co64,4), cOff = new Float64Array(cN);
+    for (let k=0;k<cN;k++) cOff[k] = stco ? be32(stco,8+k*4) : (be32(co64,8+k*8)*4294967296 + be32(co64,12+k*8));
+    const scN = be32(stsc,4), sc = [];
+    for (let k=0;k<scN;k++) sc.push({ first:be32(stsc,8+k*12), per:be32(stsc,12+k*12) });
+    const durs = new Float64Array(n);
+    { const m = be32(stts,4); let s = 0;
+      for (let k=0;k<m && s<n;k++){
+        const cnt = be32(stts,8+k*8), del = be32(stts,12+k*8);
+        for (let j=0;j<cnt && s<n;j++) durs[s++] = del/timescale;
+      } }
+    const offsets = new Float64Array(n);
+    let s = 0;
+    for (let ci=0; ci<cN && s<n; ci++){
+      let per = sc[sc.length-1].per;
+      for (let k=0;k<sc.length;k++){
+        const nf = (k+1<sc.length) ? sc[k+1].first : Infinity;
+        if (ci+1 >= sc[k].first && ci+1 < nf){ per = sc[k].per; break; }
+      }
+      let o = cOff[ci];
+      for (let j=0;j<per && s<n;j++){ offsets[s] = o; o += sizes[s]; s++; }
+    }
+    let total = 0; for (let k=0;k<n;k++) total += durs[k];
+    return { n, sizes, offsets, durs, srIdx, chCfg, aot, total };
+  }
+  throw new Error('MP4_NO_AAC');
+}
+function adtsHeader(len, srIdx, chCfg, aot){
+  const profile = Math.max(1,aot)-1, fl = len + 7;
+  return new Uint8Array([0xFF,0xF1,(profile<<6)|(srIdx<<2)|(chCfg>>2),
+    ((chCfg&3)<<6)|(fl>>11),(fl>>3)&0xFF,((fl&7)<<5)|0x1F,0xFC]);
+}
+async function* mp4Slices(file, sliceSec, ix){
+  let i = 0;
+  while (i < ix.n){
+    const parts = []; let sec = 0; const start = i;
+    while (i < ix.n && sec < sliceSec){ sec += ix.durs[i]; i++; }
+    let k = start;
+    while (k < i){
+      let j = k;
+      while (j+1 < i && ix.offsets[j+1] === ix.offsets[j] + ix.sizes[j]) j++;
+      const from = ix.offsets[k], to = ix.offsets[j] + ix.sizes[j];
+      const buf = await rdb(file, from, to);
+      for (let m = k; m <= j; m++){
+        const o = ix.offsets[m]-from, sz = ix.sizes[m];
+        parts.push(adtsHeader(sz, ix.srIdx, ix.chCfg, ix.aot), buf.subarray(o,o+sz));
+      }
+      k = j+1;
+    }
+    yield { bytes: cat(parts), sec };
+  }
+}
+async function decodeBytes(u8){
+  const AC = window.AudioContext || window.webkitAudioContext;
+  const ac = new AC(); let buf;
+  const ab = u8.buffer.slice(u8.byteOffset, u8.byteOffset + u8.length);
+  try { buf = await ac.decodeAudioData(ab); } finally { try{ ac.close(); }catch(e){} }
+  const off = new OfflineAudioContext(1, Math.max(1, Math.ceil(buf.duration*16000)), 16000);
+  const s = off.createBufferSource(); s.buffer = buf; s.connect(off.destination); s.start();
+  return (await off.startRendering()).getChannelData(0);
+}
+// শেষ ১৫ সেকেন্ডের সবচেয়ে নীরব জায়গা — শব্দের মাঝখানে কাটা এড়াতে
+function quietCut(pcm, sr){
+  const win = Math.floor(sr*0.25), from = Math.max(0, pcm.length - 15*sr);
+  let best = pcm.length, bestE = Infinity;
+  for (let i = from; i + win < pcm.length; i += win){
+    let e = 0;
+    for (let j = i; j < i+win; j += 4) e += pcm[j]*pcm[j];
+    if (e < bestE){ bestE = e; best = i; }
+  }
+  return best;
+}
+async function openAudio(file){
+  const type = await detectType(file);
+  if (type === 'wav') return { type, totalSec: 0, gen: f => wavSlices(f, CHUNK_SEC) };
+  if (type === 'mp3') return { type, totalSec: 0, gen: f => mp3Slices(f, CHUNK_SEC) };
+  if (type === 'mp4'){
+    const ix = await mp4Index(file);
+    return { type, totalSec: ix.total, gen: f => mp4Slices(f, CHUNK_SEC, ix) };
+  }
+  return { type:'other', totalSec: 0, gen: async function*(f){
+    const pcm = await decodeToMono16k(f);
+    yield { pcm, sec: pcm.length/16000 };
+  } };
+}
+
 const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ||
                  (window.matchMedia && window.matchMedia('(max-width:820px)').matches);
 const CHUNK_SEC = isMobile ? 300 : 600;          // ফোনে ছোট খণ্ড — কম ডেটা, কম মেমোরি
@@ -921,28 +1273,55 @@ async function handleFile(file){
   aborter = new AbortController();
   $('btnCancel').style.display = 'inline-block';
   try {
-    setProg(3, T('reading'));
-    let pcm;
-    try { pcm = await decodeToMono16k(file); }
-    catch(e){ throw new Error(isMobile && file.size > 40*1024*1024 ? T('bigFile') : T('badFormat')); }
-    const sr = 16000, dur = pcm.length / sr;
-    if (isMobile && dur > 45*60) throw new Error(T('bigFile'));
-    const pts = splitPoints(pcm, sr, CHUNK_SEC);
-    const total = pts.length - 1;
-    for (let i = 0; i < total; i++){
-      if (aborter.signal.aborted) throw new Error(T('cancelled'));
-      const mb = ((pts[i+1]-pts[i]) * 2 / 1048576).toFixed(1);
-      setProg(5 + 92*i/total, T('converting') + num(i+1) + '/' + num(total) +
-        ' <span style="opacity:.7;font-weight:400">(' + T('totalDur') + hms(dur*1000) +
+    setProg(2, T('scanning'));
+    let src;
+    try { src = await openAudio(file); }
+    catch(e){ src = { type:'other', totalSec:0, gen: async function*(f){ const p = await decodeToMono16k(f); yield { pcm:p, sec:p.length/16000 }; } }; }
+    if (src.type === 'other') setProg(3, T('fmtOther'));
+    if (src.totalSec > 7200) setProg(4, '<span class="err">' + T('hourLimit') + '</span>');
+
+    const sr = 16000;
+    let carry = new Float32Array(0), base = 0, idx = 0, doneSec = 0;
+    const est = src.totalSec || (file.size / (isMobile ? 1000000 : 1000000) * 60);   // মোটামুটি হিসাব
+
+    const flush = async (pcm) => {
+      if (!pcm.length) return;
+      idx++;
+      const mb = (pcm.length*2/1048576).toFixed(1);
+      const pct = Math.min(96, 5 + 91 * (est ? doneSec/est : idx/(idx+2)));
+      setProg(pct, T('converting') + num(idx) +
+        ' <span style="opacity:.7;font-weight:400">(' + hms(base*1000) +
+        (src.totalSec ? ' / ' + hms(src.totalSec*1000) : '') +
         ' · ' + T('sending') + ' ' + num(mb) + ' MB)</span>');
-      const segs = await transcribeChunk(encodeWav(pcm.subarray(pts[i], pts[i+1]), sr), pts[i]/sr);
+      const segs = await transcribeChunk(encodeWav(pcm, sr), base);
       S.segs.push(...segs);
+      base += pcm.length / sr;
       renderTranscript(); autosave();
+    };
+
+    for await (const part of src.gen(file)){
+      if (aborter.signal.aborted) throw new Error(T('cancelled'));
+      let pcm;
+      if (part.pcm) pcm = part.pcm;
+      else {
+        try { pcm = await decodeBytes(part.bytes); }
+        catch(e){ throw new Error(T('badFormat')); }
+      }
+      doneSec += part.sec || pcm.length/sr;
+      if (carry.length){
+        const j = new Float32Array(carry.length + pcm.length);
+        j.set(carry); j.set(pcm, carry.length); pcm = j;
+      }
+      const cut = quietCut(pcm, sr);
+      carry = pcm.slice(cut);
+      await flush(pcm.subarray(0, cut));
     }
-    S.elapsed = Math.max(S.elapsed, dur*1000);
+    await flush(carry); carry = new Float32Array(0);
+
+    S.elapsed = Math.max(S.elapsed, base*1000);
     $('timer').textContent = hms(S.elapsed);
     setProg(100, '<span class="ok">' + T('doneMark') + num(S.segs.length) + T('partsDone') + '</span>');
-    setTimeout(() => setProg(null), 6000);
+    setTimeout(() => setProg(null), 8000);
     autoExtract();
   } catch(e){
     setProg(100, '<span class="err">' + T('problem') + esc(e.message || String(e)) + '</span>');
@@ -991,7 +1370,7 @@ async function startMeet(){
   M.ac = new AC(); M.dest = M.ac.createMediaStreamDestination();
   const join = (s, g) => { const gn = M.ac.createGain(); gn.gain.value = g; M.ac.createMediaStreamSource(s).connect(gn).connect(M.dest); };
   join(display, 1.0); if (mic) join(mic, 0.9);
-  M.display = display; M.mic = mic; M.running = true;
+  M.display = display; M.mic = mic; M.running = true; M.viaMic = false;
   M.started = Date.now(); M.offset = 0; M.parts = 0;
   $('meetInfo').innerHTML = mic ? T('meetBoth') : T('meetOnly');
   display.getVideoTracks()[0].addEventListener('ended', () => { if (M.running) stopMeet(); });
@@ -1014,7 +1393,7 @@ function stopMeet(){
   try { if (M.rec && M.rec.state !== 'inactive') M.rec.stop(); } catch(e){}
   [M.display, M.mic].forEach(s => { if (s) s.getTracks().forEach(t => t.stop()); });
   if (M.ac) { try { M.ac.close(); } catch(e){} }
-  meetState(false, T('stDone'));
+  if (!M.viaMic) meetState(false, T('stDone'));
   S.elapsed = Math.max(S.elapsed, Date.now() - M.started);
   $('timer').textContent = hms(S.elapsed);
   setTimeout(() => drainQueue(true), 400);
@@ -1503,6 +1882,16 @@ window.addEventListener('beforeunload', e => { if (S.recording || M.running){ e.
       $('upLang').value = c.lang || '';
     }
   } catch(e){}
+
+  // রেকর্ডিং পদ্ধতি: ফোনে বা লাইভ সাপোর্ট না থাকলে Whisper-ই ডিফল্ট
+  let rm = null;
+  try { rm = localStorage.getItem('mmr_recmode'); } catch(e){}
+  if (!rm) rm = 'whisper';                              // সব জায়গায় এটাই বেশি নির্ভরযোগ্য ও নির্ভুল
+  $('recMode').value = rm;
+  if (location.protocol === 'file:' || !SR){
+    if (location.protocol === 'file:') $('fileWarn').style.display = 'block';
+    $('btnStart').disabled = false;                     // Whisper মোডে কাজ করবে
+  }
 
   applyLang();
   saveCfg();
