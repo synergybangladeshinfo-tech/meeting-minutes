@@ -458,6 +458,7 @@ bn:{
  cancelled:'বাতিল করা হয়েছে',
  keyBad:'API Key ভুল বা মেয়াদোত্তীর্ণ', rateLimit:'সার্ভিসের সীমা ছাড়িয়ে গেছে — কিছুক্ষণ পর আবার চেষ্টা করুন',
  retrying:'সংযোগ কেটে গেছে — আবার চেষ্টা করছি (', retryTail:'/৩)…',
+ srvBusy:'সার্ভারে সাময়িক সমস্যা — আবার চেষ্টা করছি (', srvGone:'সার্ভার বারবার সাড়া দিচ্ছে না (Internal Server Error)। কয়েক মিনিট পর আবার চেষ্টা করুন — এটি Groq-এর সাময়িক সমস্যা, আপনার ফাইল বা key-এর দোষ নয়।',
  netGone:'ইন্টারনেট সংযোগ ধরে রাখা যাচ্ছে না। মোবাইল ডেটার বদলে Wi-Fi দিয়ে চেষ্টা করুন — এক ঘণ্টার অডিও পাঠাতে প্রায় ১১০ MB লাগে।',
  offline:'ফোনটি এখন ইন্টারনেটে যুক্ত নেই। সংযোগ ফিরে এলে আবার চেষ্টা করুন।',
  bigFile:'এই ফরম্যাটের বড় ফাইল ফোনের মেমোরিতে ধরে না। ফাইলটি mp3 বা m4a-তে রূপান্তর করুন, অথবা ভাগ করে নিন।',
@@ -577,6 +578,7 @@ en:{
  cancelled:'Cancelled',
  keyBad:'API key is wrong or expired', rateLimit:'Service limit reached — try again shortly',
  retrying:'Connection dropped — retrying (', retryTail:'/3)…',
+ srvBusy:'Temporary server problem — retrying (', srvGone:'The server keeps failing (Internal Server Error). Try again in a few minutes — this is a temporary Groq problem, not your file or key.',
  netGone:'The internet connection keeps dropping. Try Wi-Fi instead of mobile data — one hour of audio is about 110 MB to upload.',
  offline:'The phone is not connected to the internet right now. Try again once the connection is back.',
  bigFile:'A large file in this format will not fit in the phone’s memory. Convert it to mp3 or m4a, or split it.',
@@ -1276,14 +1278,22 @@ async function transcribeOnce(wav, offsetSec){
 // নেটওয়ার্ক কেটে গেলে নিজে থেকেই আবার চেষ্টা করে (মোবাইল ডেটার জন্য জরুরি)
 async function transcribeChunk(wav, offsetSec){
   const keepMsg = $('progTxt').innerHTML;
-  for (let att = 0; att <= 3; att++){
+  for (let att = 0; att <= 4; att++){
     try { return await transcribeOnce(wav, offsetSec); }
     catch(e){
       if (aborter && aborter.signal.aborted) throw e;
-      const retriable = !e.http && netErrorish(e);      // HTTP ভুল হলে বারবার চেষ্টা করে লাভ নেই
-      if (!retriable || att === 3){
+      const serverSide = e.http >= 500;                 // সার্ভারের দোষ — আবার চেষ্টা করা যায়
+      const retriable = serverSide || (!e.http && netErrorish(e));
+      if (!retriable || att === 4){
+        if (serverSide) throw new Error(T('srvGone'));
         if (retriable) throw new Error(T('netGone'));
         throw e;
+      }
+      if (serverSide){
+        setProg(50, '<span class="err">' + T('srvBusy') + num(att+1) + '/' + num(4) + ')…</span>');
+        await sleep(4000 * (att + 1));
+        $('progTxt').innerHTML = keepMsg;
+        continue;
       }
       if (navigator.onLine === false){
         setProg(50, '<span class="err">' + T('offline') + '</span>');
@@ -1333,8 +1343,13 @@ async function handleFile(file){
         ' <span style="opacity:.7;font-weight:400">(' + hms(base*1000) +
         (src.totalSec ? ' / ' + hms(src.totalSec*1000) : '') +
         ' · ' + T('sending') + ' ' + num(mb) + ' MB)</span>');
-      const segs = await transcribeChunk(encodeWav(pcm, sr), base);
-      S.segs.push(...segs);
+      // প্রায় নীরব অংশ পাঠিয়ে লাভ নেই — কোটাও বাঁচে, সার্ভারও ঝামেলা করে না
+      let peak = 0;
+      for (let i = 0; i < pcm.length; i += 97) peak = Math.max(peak, Math.abs(pcm[i]));
+      if (peak > 0.004){
+        const segs = await transcribeChunk(encodeWav(pcm, sr), base);
+        S.segs.push(...segs);
+      }
       base += pcm.length / sr;
       renderTranscript(); autosave();
     };
@@ -1538,10 +1553,16 @@ async function chatJSON(system, user){
       await waitUntil(Date.now() + (sec + 2) * 1000, T('waitHit'));
       continue;
     }
+    if (r.status >= 500 && attempt < 4){          // সার্ভারের সাময়িক ত্রুটি — আবার চেষ্টা
+      setProg(50, '<span class="err">' + T('srvBusy') + num(attempt+1) + '/' + num(4) + ')…</span>');
+      await sleep(4000 * (attempt + 1));
+      continue;
+    }
     if (!r.ok){
       let m = r.status + ''; try { const j = await r.json(); m = (j.error && j.error.message) || m; } catch(e){}
       if (r.status === 401) m = T('keyBad');
       if (r.status === 413) m = T('tooBig');
+      if (r.status >= 500) m = T('srvGone');
       throw new Error(m);
     }
     const j = await r.json();
